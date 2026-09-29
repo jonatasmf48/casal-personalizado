@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Casal Personalizados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --marrom-escuro:#2b1c10; --marrom:#4a2f1a; --caramelo:#8a5a33;
+    --dourado:#c9a227; --dourado-claro:#e6c65a; --creme:#f9f4eb; --bege:#f1e7d3;
+    --texto:#3a2a1b; --branco:#ffffff; --verde:#2e7d32; --vermelho:#b03333; --sombra:0 8px 30px rgba(43,28,16,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Nunito Sans',sans-serif;color:var(--texto);background:var(--creme);min-height:100vh;}
+  h1,h2,h3{font-family:'Playfair Display',serif;}
+  .container{max-width:1080px;margin:0 auto;padding:0 20px;}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:800;padding:12px 22px;border-radius:50px;cursor:pointer;border:none;transition:transform .2s, box-shadow .2s;font-size:.95rem;text-decoration:none;}
+  .btn-dourado{background:linear-gradient(135deg,var(--dourado-claro),var(--dourado));color:var(--marrom-escuro);}
+  .btn-dourado:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(201,162,39,.4);}
+  .btn-outline{background:transparent;color:var(--marrom);border:2px solid var(--caramelo);}
+  .btn-contorno{background:transparent;color:var(--dourado-claro);border:2px solid var(--dourado);}
+  .btn-verde{background:var(--verde);color:#fff;}
+  .btn-verde:hover{filter:brightness(1.1);}
+  .btn-vermelho{background:var(--vermelho);color:#fff;}
+  .btn-vermelho:hover{filter:brightness(1.1);}
+  .campo{display:flex;flex-direction:column;gap:6px;}
+  .campo label{font-weight:800;font-size:.85rem;color:var(--marrom-escuro);}
+  .campo input,.campo select,.campo textarea{border:2px solid #e2d5b8;border-radius:10px;padding:11px 14px;font-size:.95rem;font-family:inherit;background:#fdfaf3;transition:border-color .2s;color:var(--texto);}
+  .campo input:focus,.campo select:focus,.campo textarea:focus{outline:none;border-color:var(--dourado);}
+  .erro{color:var(--vermelho);font-weight:700;text-align:center;min-height:22px;font-size:.9rem;}
+  .msg{color:var(--verde);font-weight:700;text-align:center;min-height:22px;font-size:.9rem;}
+
+  .tela-login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--marrom-escuro) 0%,#3a2513 60%,#57371c 100%);padding:20px;}
+  .card-login{background:var(--creme);border-radius:18px;padding:36px 30px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.4);display:flex;flex-direction:column;gap:14px;border-top:5px solid var(--dourado);}
+  .card-login h1{font-size:1.3rem;text-align:center;color:var(--marrom-escuro);}
+  .card-login p{text-align:center;color:var(--caramelo);font-weight:700;margin-bottom:6px;}
+
+  .painel-topo{background:var(--marrom-escuro);color:#f3ead6;padding:22px 0;border-bottom:3px solid var(--dourado);}
+  .painel-topo .container{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .painel-topo h1{color:var(--dourado-claro);}
+  .topo-acoes{display:flex;gap:10px;}
+
+  .abas{background:var(--bege);border-bottom:1px solid #d5c39a;position:sticky;top:0;z-index:50;}
+  .abas .container{display:flex;gap:4px;overflow-x:auto;padding-top:8px;}
+  .aba{background:none;border:none;padding:12px 16px;font-weight:800;color:var(--marrom);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;font-size:.92rem;}
+  .aba.ativa{border-bottom-color:var(--dourado);color:var(--caramelo);}
+  .badge{background:var(--vermelho);color:#fff;border-radius:50px;padding:1px 8px;font-size:.75rem;display:none;}
+
+  .conteudo-aba{display:none;padding:34px 0 60px;}
+  .conteudo-aba.ativa{display:block;}
+  .conteudo-aba h2{color:var(--marrom-escuro);margin-bottom:6px;}
+  .dica{color:#6d5840;margin-bottom:24px;font-size:.92rem;}
+
+  .lista-cards{display:flex;flex-direction:column;gap:14px;margin-bottom:30px;}
+  .card{background:var(--branco);border-radius:14px;padding:18px 20px;box-shadow:var(--sombra);border:1px solid #eadfc9;}
+  .card h3{color:var(--marrom-escuro);font-size:1.05rem;margin-bottom:4px;}
+  .card p{font-size:.9rem;color:#5a4732;}
+  .card .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:#8d7a5e;font-weight:700;margin:8px 0;}
+  .pedido-status{display:inline-block;padding:3px 12px;border-radius:50px;font-size:.78rem;font-weight:800;}
+  .status-novo{background:#fdefdc;color:#a05a10;}
+  .status-emproducao{background:#e3edff;color:#1f4fa0;}
+  .status-enviado{background:#e7f7ec;color:#1f7a3d;}
+  .status-concluido{background:#f1e7d3;color:#5a4732;}
+  .status-cancelado{background:#f3e0e0;color:#a23c3c;}
+  .card .acoes{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+  .form-produto,.form-config{display:flex;flex-direction:column;gap:14px;margin-bottom:26px;}
+  .grade2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .acoes-form{display:flex;gap:10px;}
+  .avaliacao-nome{font-weight:800;color:var(--marrom-escuro);}
+  .estrelas{color:var(--dourado);letter-spacing:2px;}
+  .empty{text-align:center;color:#8d7a5e;padding:30px;font-weight:700;}
+  @media (max-width:640px){ .grade2{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<div id="telaLogin" class="tela-login">
+  <form id="formLogin" class="card-login">
+    <h1>@CASAL.PERSONALIZADOS</h1>
+    <p>Área administrativa</p>
+    <div class="campo">
+      <label>Usuário</label>
+      <input type="text" id="loginUsuario" autocomplete="username" required>
+    </div>
+    <div class="campo">
+      <label>Senha</label>
+      <input type="password" id="loginSenha" autocomplete="current-password" required>
+    </div>
+    <button type="submit" class="btn btn-dourado">Entrar</button>
+    <div class="erro" id="erroLogin"></div>
+  </form>
+</div>
+
+<div id="painel" class="painel" style="display:none;">
+  <header class="painel-topo">
+    <div class="container">
+      <h1>Painel Admin</h1>
+      <div class="topo-acoes">
+        <a href="/" target="_blank" class="btn btn-contorno">Ver loja →</a>
+        <button type="button" class="btn btn-outline" id="btnSair">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="abas">
+    <div class="container">
+      <button type="button" data-aba="pedidos" class="aba ativa">📦 Pedidos <span id="badgePedidos" class="badge"></span></button>
+      <button type="button" data-aba="produtos" class="aba">🛍️ Produtos</button>
+      <button type="button" data-aba="avaliacoes" class="aba">⭐ Avaliações <span id="badgeAvaliacoes" class="badge"></span></button>
+      <button type="button" data-aba="config" class="aba">⚙️ Configurações</button>
+      <button type="button" data-aba="senha" class="aba">🔑 Senha</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section id="aba-pedidos" class="conteudo-aba ativa">
+      <h2>Pedidos recebidos</h2>
+      <p class="dica">Quando um cliente envia pedido pelo site, ele aparece aqui e também na sua mensagem do WhatsApp.</p>
+      <div id="listaPedidos" class="lista-cards"></div>
+    </section>
+
+    <section id="aba-produtos" class="conteudo-aba">
+      <h2>Produtos</h2>
+      <p class="dica">Edite preços, adicione, remova ou troque a ordem dos produtos. Tudo reflete na loja na hora.</p>
+      <form id="formProduto" class="card form-produto">
+        <h3 id="tituloFormProduto">➕ Novo produto</h3>
+        <input type="hidden" id="produtoId">
+        <div class="grade2">
+          <div class="campo"><label>Categoria</label><select id="pCategoria">
+            <option>Camisetas</option><option>Canecas</option><option>Moletons</option><option>Quadros</option><option>Outros</option>
+          </select></div>
+          <div class="campo"><label>Nome do produto</label><input type="text" id="pNome" required></div>
+        </div>
+        <div class="campo"><label>Preço (ex: R$ 45 | 12+ un: R$ 40 cada)</label><input type="text" id="pPreco" required></div>
+        <div class="campo"><label>Detalhes / patamares de desconto</label><input type="text" id="pDetalhes" placeholder="3+ un: R$ 100 cada | 10+ un: R$ 80 cada"></div>
+        <div class="campo"><label>Brinde</label><input type="text" id="pBrinde" placeholder="🎁 Brinde 10+: 2 quadros pequenos de azulejo"></div>
+        <div class="campo">
+          <label>Enviar foto do produto (opcional)</label>
+          <input type="file" id="pArquivoFoto" accept="image/*">
+          <img id="pPreviewFoto" alt="Prévia da foto" style="display:none;max-height:120px;border-radius:10px;margin-top:8px;">
+          <button type="button" class="btn btn-outline" id="btnRemoverPreviewFoto" style="display:none;margin-top:8px;">Remover foto</button>
+          <small style="color:#8d7a5e;">JPG, PNG, WEBP ou GIF — até 5MB</small>
+        </div>
+        <div class="campo"><label>URL da foto (opcional — preenchida automaticamente ao enviar)</label><input type="text" id="pFoto" placeholder="/uploads/arquivo.png"></div>
+        <div class="acoes-form">
+          <button type="submit" class="btn btn-dourado" id="btnSalvarProduto">Salvar produto</button>
+          <button type="button" class="btn btn-outline" id="btnCancelarProduto" style="display:none;">Cancelar edição</button>
+        </div>
+      </form>
+      <div id="listaProdutos" class="lista-cards"></div>
+    </section>
+
+    <section id="aba-avaliacoes" class="conteudo-aba">
+      <h2>Avaliações dos clientes</h2>
+      <p class="dica">Aprove as avaliações para elas aparecerem na loja. Remova as que não quiser.</p>
+      <div id="listaAvaliacoesAdmin" class="lista-cards"></div>
+    </section>
+
+    <section id="aba-config" class="conteudo-aba">
+      <h2>Configurações da loja</h2>
+      <p class="dica">Altere textos do site, seu WhatsApp, horários e a foto de destaque. Salve e veja na loja.</p>
+      <form id="formConfig" class="card form-config">
+        <div class="campo"><label>Nome do site</label><input type="text" id="sNome"></div>
+        <div class="campo"><label>Slogan / logo textual</label><input type="text" id="sSlogan"></div>
+        <div class="campo"><label>WhatsApp (somente números, ex: 5511999999999)</label><input type="text" id="sWhatsapp"></div>
+        <div class="campo"><label>Frase do topo (hero)</label><input type="text" id="sHeroTag"></div>
+        <div class="campo"><label>Título principal</label><input type="text" id="sHeroTitulo"></div>
+        <div class="campo"><label>Subtítulo</label><input type="text" id="sHeroSubtitulo"></div>
+        <div class="campo"><label>Destaque do brinde</label><input type="text" id="sBrinde"></div>
+        <div class="campo"><label>Horário de atendimento</label><input type="text" id="sAtendimento"></div>
+        <div class="campo">
+          <label>Foto de destaque (topo do site)</label>
+          <input type="file" id="sArquivoHero" accept="image/*">
+          <button type="button" class="btn btn-outline" id="btnEnviarHero">Enviar foto de destaque</button>
+          <img id="sPreviewHero" alt="Prévia da foto de destaque" style="display:none;max-height:120px;border-radius:10px;margin-top:8px;">
+        </div>
+        <button type="submit" class="btn btn-dourado">Salvar configurações</button>
+        <div class="msg" id="msgConfig"></div>
+      </form>
+    </section>
+
+    <section id="aba-senha" class="conteudo-aba">
+      <h2>Trocar senha</h2>
+      <form id="formSenha" class="card form-config">
+        <div class="campo"><label>Senha atual</label><input type="password" id="senhaAtual" autocomplete="current-password" required></div>
+        <div class="campo"><label>Nova senha (mínimo 8 caracteres)</label><input type="password" id="senhaNova" autocomplete="new-password" required></div>
+        <button type="submit" class="btn btn-dourado">Trocar senha</button>
+        <div class="msg" id="msgSenha"></div>
+      </form>
+    </section>
+  </main>
+</div>
+
+<script>
+/* =========================================================
+   CASAL PERSONALIZADOS — Painel Admin autossuficiente
+   (CSS + JS no mesmo arquivo, delegação de eventos)
+   ========================================================= */
+function $(id) { return document.getElementById(id); }
+
+const api = {
+  async req(url, metodo, corpo) {
+    const opcoes = { method: metodo, headers: { 'Content-Type': 'application/json' } };
+    if (corpo) opcoes.body = JSON.stringify(corpo);
+    let resp;
+    try {
+      resp = await fetch(url, opcoes);
+    } catch (err) {
+      alert('Falha de conexão com o servidor. Confira se o npm start está rodando.');
+      throw err;
+    }
+    if (resp.status === 401) {
+      alert('Sessão expirada. Faça login novamente.');
+      mostrarLogin();
+      throw new Error('Sessão expirada');
+    }
+    let dados;
+    try {
+      dados = await resp.json();
+    } catch (err) {
+      alert('Resposta inválida do servidor (status ' + resp.status + '). Reinicie o servidor.');
+      throw err;
+    }
+    return dados;
+  }
+};
+
+/* ---------- LOGIN / SESSÃO ---------- */
+function mostrarLogin() {
+  $('telaLogin').style.display = 'flex';
+  $('painel').style.display = 'none';
+}
+function mostrarPainel() {
+  $('telaLogin').style.display = 'none';
+  $('painel').style.display = 'block';
+  carregarTudo();
+}
+$('formLogin').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  const usuario = $('loginUsuario').value.trim();
+  const senha = $('loginSenha').value;
+  try {
+    const r = await api.req('/api/admin/login', 'POST', { usuario, senha });
+    if (r.ok) mostrarPainel();
+    else $('erroLogin').textContent = r.erro || 'Falha no login.';
+  } catch (err) {
+    $('erroLogin').textContent = 'Erro de conexão. Tente novamente.';
+  }
+});
+$('btnSair').addEventListener('click', async function () {
+  await api.req('/api/admin/logout', 'POST');
+  mostrarLogin();
+});
+
+(async function checarSessao() {
+  try {
+    const r = await api.req('/api/admin/me', 'GET');
+    if (r.usuario) mostrarPainel(); else mostrarLogin();
+  } catch (e) { mostrarLogin(); }
+})();
+
+/* ---------- ABAS ---------- */
+document.querySelectorAll('.aba').forEach(function (aba) {
+  aba.addEventListener('click', function () {
+    document.querySelectorAll('.aba').forEach(function (a) { a.classList.remove('ativa'); });
+    this.classList.add('ativa');
+    document.querySelectorAll('.conteudo-aba').forEach(function (s) { s.classList.remove('ativa'); });
+    $('aba-' + this.dataset.aba).classList.add('ativa');
+  });
+});
+
+/* ---------- CARREGAR TUDO ---------- */
+function carregarTudo() {
+  carregarPedidos();
+  carregarProdutosAdmin();
+  carregarAvaliacoesAdmin();
+  carregarConfig();
+}
+
+/* =========================================================
+   DELEGAÇÃO DE EVENTOS — resolve os botões Editar/Excluir
+   Funciona com botões criados dinamicamente, sem onclick
+   ========================================================= */
+document.addEventListener('click', function (e) {
+  const btn = e.target.closest('[data-acao]');
+  if (!btn) return;
+  const acao = btn.getAttribute('data-acao');
+  const id = btn.getAttribute('data-id');
+  if (acao === 'editar') editarProduto(id);
+  else if (acao === 'excluir') excluirProduto(id);
+  else if (acao === 'status') mudarStatus(id, btn.getAttribute('data-status'));
+  else if (acao === 'excluir-pedido') excluirPedido(id);
+  else if (acao === 'avaliacao') mudarAvaliacao(id, btn.getAttribute('data-aprovado'));
+  else if (acao === 'excluir-avaliacao') excluirAvaliacao(id);
+});
+
+/* ---------- PEDIDOS ---------- */
+async function carregarPedidos() {
+  try {
+    const pedidos = await api.req('/api/admin/orders', 'GET');
+    const lista = $('listaPedidos');
+    lista.innerHTML = '';
+    if (!pedidos.length) {
+      lista.innerHTML = '<p class="empty">Nenhum pedido recebido ainda. Os pedidos do site aparecem aqui.</p>';
+      return;
+    }
+    const novos = pedidos.filter(function (p) { return p.status === 'novo'; }).length;
+    $('badgePedidos').style.display = novos ? 'inline' : 'none';
+    $('badgePedidos').textContent = novos;
+    const classes = { 'novo':'status-novo', 'em producao':'status-emproducao', 'enviado':'status-enviado', 'concluido':'status-concluido', 'cancelado':'status-cancelado' };
+    const rotulos = { 'novo':'🆕 Novo', 'em producao':'🔧 Em produção', 'enviado':'📬 Enviado', 'concluido':'✅ Concluído', 'cancelado':'❌ Cancelado' };
+    pedidos.forEach(function (p) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = '<h3>#' + p.id + ' — ' + p.nome + '</h3>' +
+        '<p><strong>' + p.produto + '</strong> · Qtd: ' + p.quantidade + (p.tamanho ? ' · Tam: ' + p.tamanho : '') + (p.cor ? ' · Cor: ' + p.cor : '') + '</p>' +
+        (p.texto ? '<p>📝 ' + p.texto + '</p>' : '') +
+        '<div class="meta"><span>' + p.criado_em + '</span><span class="pedido-status ' + (classes[p.status] || 'status-novo') + '">' + (rotulos[p.status] || p.status) + '</span></div>' +
+        '<div class="acoes">' +
+        '<button type="button" class="btn btn-outline" data-acao="status" data-id="' + p.id + '" data-status="em producao">Em produção</button>' +
+        '<button type="button" class="btn btn-outline" data-acao="status" data-id="' + p.id + '" data-status="enviado">Enviado</button>' +
+        '<button type="button" class="btn btn-verde" data-acao="status" data-id="' + p.id + '" data-status="concluido">Concluído</button>' +
+        '<button type="button" class="btn btn-vermelho" data-acao="status" data-id="' + p.id + '" data-status="cancelado">Cancelar</button>' +
+        '<button type="button" class="btn btn-vermelho" data-acao="excluir-pedido" data-id="' + p.id + '">Excluir</button></div>';
+      lista.appendChild(card);
+    });
+  } catch (e) { console.error('Pedidos:', e); }
+}
+async function mudarStatus(id, status) {
+  try {
+    await api.req('/api/admin/orders/' + id, 'PUT', { status: status });
+    alert('✅ Status atualizado.');
+    carregarPedidos();
+  } catch (e) { console.error('Status:', e); }
+}
+async function excluirPedido(id) {
+  if (!confirm('Excluir este pedido?')) return;
+  try {
+    const r = await api.req('/api/admin/orders/' + id, 'DELETE');
+    if (r.ok) { alert('✅ Pedido excluído.'); carregarPedidos(); }
+  } catch (e) { console.error('Excluir pedido:', e); }
+}
+
+/* ---------- PRODUTOS ---------- */
+async function carregarProdutosAdmin() {
+  try {
+    const produtos = await api.req('/api/admin/products', 'GET');
+    const lista = $('listaProdutos');
+    lista.innerHTML = '';
+    if (!produtos.length) {
+      lista.innerHTML = '<p class="empty">Nenhum produto. Adicione o primeiro acima.</p>';
+      return;
+    }
+    produtos.forEach(function (p) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      const fotoMini = p.foto
+        ? '<img src="' + p.foto + '" alt="' + p.nome + '" style="height:60px;width:60px;object-fit:cover;border-radius:8px;margin-bottom:6px;">'
+        : '';
+      card.innerHTML = fotoMini +
+        '<h3>' + p.nome + ' <small style="color:#8d7a5e;font-weight:600;">(' + p.categoria + ')</small></h3>' +
+        '<p><strong>' + p.preco + '</strong>' + (p.brinde ? ' · ' + p.brinde : '') + '</p>' +
+        '<div class="acoes">' +
+        '<button type="button" class="btn btn-outline" data-acao="editar" data-id="' + p.id + '">Editar</button>' +
+        '<button type="button" class="btn btn-vermelho" data-acao="excluir" data-id="' + p.id + '">Excluir</button></div>';
+      lista.appendChild(card);
+    });
+  } catch (e) { console.error('Produtos:', e); }
+}
+
+function editarProduto(id) {
+  api.req('/api/admin/products', 'GET').then(function (produtos) {
+    const p = produtos.find(function (x) { return Number(x.id) === Number(id); });
+    if (!p) { alert('Produto não encontrado.'); return; }
+    $('produtoId').value = p.id;
+    $('pCategoria').value = p.categoria;
+    $('pNome').value = p.nome;
+    $('pPreco').value = p.preco;
+    $('pDetalhes').value = p.detalhes || '';
+    $('pBrinde').value = p.brinde || '';
+    $('pFoto').value = p.foto || '';
+    if (p.foto) {
+      $('pPreviewFoto').src = p.foto;
+      $('pPreviewFoto').style.display = 'block';
+      $('btnRemoverPreviewFoto').style.display = 'inline-flex';
+    } else {
+      $('pPreviewFoto').style.display = 'none';
+      $('btnRemoverPreviewFoto').style.display = 'none';
+    }
+    $('tituloFormProduto').textContent = '✏️ Editando: ' + p.nome;
+    $('btnCancelarProduto').style.display = 'inline-flex';
+    $('btnSalvarProduto').textContent = 'Salvar alterações';
+    $('aba-produtos').scrollIntoView({ behavior: 'smooth' });
+  }).catch(function (e) {
+    alert('Sessão expirada ou erro de conexão. Faça login novamente.');
+  });
+}
+
+function cancelarEdicaoProduto() {
+  $('formProduto').reset();
+  $('produtoId').value = '';
+  $('tituloFormProduto').textContent = '➕ Novo produto';
+  $('btnCancelarProduto').style.display = 'none';
+  $('btnSalvarProduto').textContent = 'Salvar produto';
+  $('pPreviewFoto').style.display = 'none';
+  $('btnRemoverPreviewFoto').style.display = 'none';
+}
+$('btnCancelarProduto').addEventListener('click', cancelarEdicaoProduto);
+
+$('pArquivoFoto').addEventListener('change', function () {
+  const f = this.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = function (e) {
+    $('pPreviewFoto').src = e.target.result;
+    $('pPreviewFoto').style.display = 'block';
+    $('btnRemoverPreviewFoto').style.display = 'inline-flex';
+  };
+  r.readAsDataURL(f);
+});
+$('btnRemoverPreviewFoto').addEventListener('click', function () {
+  $('pArquivoFoto').value = '';
+  $('pPreviewFoto').style.display = 'none';
+  this.style.display = 'none';
+});
+
+$('formProduto').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  const id = $('produtoId').value;
+  let foto = $('pFoto').value.trim();
+  const arquivo = $('pArquivoFoto').files[0];
+  if (arquivo) {
+    const fd = new FormData();
+    fd.append('foto', arquivo);
+    try {
+      const r = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+      const j = await r.json();
+      if (j.url) foto = j.url;
+      else { alert(j.erro || 'Falha no upload. Tente outra imagem.'); return; }
+    } catch (err) {
+      alert('Falha no upload. Verifique a conexão e tente novamente.');
+      return;
+    }
+  }
+  const dados = {
+    categoria: $('pCategoria').value,
+    nome: $('pNome').value.trim(),
+    preco: $('pPreco').value.trim(),
+    detalhes: $('pDetalhes').value.trim(),
+    brinde: $('pBrinde').value.trim(),
+    foto: foto
+  };
+  try {
+    if (id) await api.req('/api/admin/products/' + id, 'PUT', dados);
+    else await api.req('/api/admin/products', 'POST', dados);
+    alert(id ? '✅ Produto atualizado!' : '✅ Produto criado!');
+  } catch (err) {
+    alert('Não foi possível salvar. Verifique a sessão.');
+    return;
+  }
+  cancelarEdicaoProduto();
+  carregarProdutosAdmin();
+});
+
+function excluirProduto(id) {
+  if (!confirm('Excluir este produto? Essa ação não pode ser desfeita.')) return;
+  api.req('/api/admin/products/' + id, 'DELETE').then(function (r) {
+    if (r.ok) { alert('✅ Produto excluído com sucesso.'); carregarProdutosAdmin(); }
+  }).catch(function (e) {
+    console.error('Excluir produto:', e);
+  });
+}
+
+/* ---------- AVALIAÇÕES ---------- */
+async function carregarAvaliacoesAdmin() {
+  try {
+    const avaliacoes = await api.req('/api/admin/reviews', 'GET');
+    const lista = $('listaAvaliacoesAdmin');
+    lista.innerHTML = '';
+    if (!avaliacoes.length) {
+      lista.innerHTML = '<p class="empty">Nenhuma avaliação recebida.</p>';
+      return;
+    }
+    const pendentes = avaliacoes.filter(function (a) { return !a.aprovado; }).length;
+    $('badgeAvaliacoes').style.display = pendentes ? 'inline' : 'none';
+    $('badgeAvaliacoes').textContent = pendentes;
+    avaliacoes.forEach(function (a) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = '<div class="avaliacao-nome">' + a.nome + ' <span class="estrelas">' + '★'.repeat(a.estrelas) + '☆'.repeat(5 - a.estrelas) + '</span></div>' +
+        '<p>' + a.comentario + '</p>' +
+        '<div class="meta"><span>' + (a.data || '') + '</span><span class="pedido-status ' + (a.aprovado ? 'status-concluido' : 'status-novo') + '">' + (a.aprovado ? '✅ Publicada' : '⏳ Aguardando aprovação') + '</span></div>' +
+        '<div class="acoes">' +
+        (a.aprovado
+          ? '<button type="button" class="btn btn-outline" data-acao="avaliacao" data-id="' + a.id + '" data-aprovado="0">Ocultar</button>'
+          : '<button type="button" class="btn btn-verde" data-acao="avaliacao" data-id="' + a.id + '" data-aprovado="1">Aprovar</button>') +
+        '<button type="button" class="btn btn-vermelho" data-acao="excluir-avaliacao" data-id="' + a.id + '">Excluir</button></div>';
+      lista.appendChild(card);
+    });
+  } catch (e) { console.error('Avaliações:', e); }
+}
+async function mudarAvaliacao(id, aprovado) {
+  try {
+    await api.req('/api/admin/reviews/' + id, 'PUT', { aprovado: Number(aprovado) });
+    alert('✅ Avaliação atualizada.');
+    carregarAvaliacoesAdmin();
+  } catch (e) { console.error('Avaliação:', e); }
+}
+function excluirAvaliacao(id) {
+  if (!confirm('Excluir esta avaliação?')) return;
+  api.req('/api/admin/reviews/' + id, 'DELETE').then(function (r) {
+    if (r.ok) { alert('✅ Avaliação excluída.'); carregarAvaliacoesAdmin(); }
+  }).catch(function (e) { console.error('Excluir avaliação:', e); });
+}
+
+/* ---------- CONFIGURAÇÕES ---------- */
+async function carregarConfig() {
+  try {
+    const s = await api.req('/api/admin/settings', 'GET');
+    $('sNome').value = s.site_nome || '';
+    $('sSlogan').value = s.site_slogan || '';
+    $('sWhatsapp').value = s.whatsapp || '';
+    $('sHeroTag').value = s.hero_tag || '';
+    $('sHeroTitulo').value = s.hero_titulo || '';
+    $('sHeroSubtitulo').value = s.hero_subtitulo || '';
+    $('sBrinde').value = s.brinde_destaque || '';
+    $('sAtendimento').value = s.atendimento || '';
+    if (s.hero_imagem) {
+      $('sPreviewHero').src = s.hero_imagem;
+      $('sPreviewHero').style.display = 'block';
+    }
+  } catch (e) { console.error('Config:', e); }
+}
+$('formConfig').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  const dados = {
+    site_nome: $('sNome').value.trim(),
+    site_slogan: $('sSlogan').value.trim(),
+    whatsapp: $('sWhatsapp').value.replace(/\D/g, ''),
+    hero_tag: $('sHeroTag').value.trim(),
+    hero_titulo: $('sHeroTitulo').value.trim(),
+    hero_subtitulo: $('sHeroSubtitulo').value.trim(),
+    brinde_destaque: $('sBrinde').value.trim(),
+    atendimento: $('sAtendimento').value.trim()
+  };
+  try {
+    await api.req('/api/admin/settings', 'PUT', dados);
+    $('msgConfig').textContent = '✅ Configurações salvas!';
+    setTimeout(function () { $('msgConfig').textContent = ''; }, 3500);
+  } catch (e) { console.error('Salvar config:', e); }
+});
+$('btnEnviarHero').addEventListener('click', async function () {
+  const arquivo = $('sArquivoHero').files[0];
+  if (!arquivo) { alert('Escolha uma imagem primeiro.'); return; }
+  const fd = new FormData();
+  fd.append('foto', arquivo);
+  try {
+    const r = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+    const j = await r.json();
+    if (!j.url) { alert(j.erro || 'Falha no upload.'); return; }
+    await api.req('/api/admin/settings', 'PUT', { hero_imagem: j.url });
+    $('sPreviewHero').src = j.url;
+    $('sPreviewHero').style.display = 'block';
+    alert('✅ Foto de destaque atualizada!');
+  } catch (err) {
+    alert('Falha no upload. Tente novamente.');
+  }
+});
+
+/* ---------- SENHA ---------- */
+$('formSenha').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  const atual = $('senhaAtual').value;
+  const nova = $('senhaNova').value;
+  if (nova.length < 8) {
+    $('msgSenha').style.color = '#b03333';
+    $('msgSenha').textContent = 'A nova senha precisa de 8+ caracteres.';
+    return;
+  }
+  const r = await api.req('/api/admin/password', 'PUT', { atual: atual, nova: nova });
+  $('msgSenha').style.color = r.ok ? '#2e7d32' : '#b03333';
+  $('msgSenha').textContent = r.ok ? '✅ Senha trocada com sucesso!' : (r.erro || 'Erro ao trocar senha.');
+  this.reset();
+  setTimeout(function () { $('msgSenha').textContent = ''; }, 3500);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CASAL PERSONALIZADOS — Presentes únicos para quem você ama</title>
+<meta name="description" content="Camisetas, canecas, moletons e quadros personalizados com total liberdade de criação. Sem pedidos limitados, você escolhe o tema e a mensagem.">
+<link rel="icon" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --marrom-escuro:#2b1c10; --marrom:#4a2f1a; --caramelo:#8a5a33;
+  --dourado:#c9a227; --dourado-claro:#e6c65a; --creme:#f9f4eb; --bege:#f1e7d3;
+  --texto:#3a2a1b; --branco:#ffffff; --whats:#25d366; --verde:#2e7d32;
+  --sombra:0 8px 30px rgba(43,28,16,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito Sans',sans-serif;color:var(--texto);background:var(--creme);line-height:1.6;}
+h1,h2,h3{font-family:'Playfair Display',serif;}
+img{max-width:100%;display:block;}
+.container{max-width:1140px;margin:0 auto;padding:0 20px;}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(43,28,16,.96);backdrop-filter:blur(8px);border-bottom:2px solid var(--dourado);transition:box-shadow .3s;}
+header.scrolled{box-shadow:0 4px 20px rgba(0,0,0,.35);}
+.nav-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;max-width:1140px;margin:0 auto;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.brand img{height:56px;width:auto;}
+.brand-name{font-family:'Playfair Display',serif;color:var(--dourado-claro);font-size:1.15rem;font-weight:700;line-height:1.1;}
+.brand-name small{display:block;font-family:'Nunito Sans',sans-serif;font-size:.62rem;color:#d8c9a8;letter-spacing:2px;text-transform:uppercase;}
+nav.desktop{display:flex;align-items:center;gap:22px;}
+nav.desktop a{color:#efe4cd;text-decoration:none;font-weight:600;font-size:.92rem;transition:color .2s;}
+nav.desktop a:hover{color:var(--dourado-claro);}
+.btn-whats-nav{background:var(--whats);color:#fff !important;padding:9px 18px;border-radius:50px;font-weight:800 !important;transition:transform .2s, filter .2s;}
+.btn-whats-nav:hover{transform:translateY(-2px);filter:brightness(1.08);}
+.hamburger{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:6px;}
+.hamburger span{width:26px;height:3px;background:var(--dourado-claro);border-radius:3px;transition:.3s;}
+nav.mobile{display:none;position:fixed;top:76px;left:0;right:0;background:var(--marrom-escuro);flex-direction:column;padding:20px;gap:16px;border-bottom:2px solid var(--dourado);}
+nav.mobile.open{display:flex;}
+nav.mobile a{color:#efe4cd;text-decoration:none;font-weight:700;font-size:1.05rem;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.12);}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--marrom-escuro) 0%,#3a2513 55%,#57371c 100%);color:#f3ead6;padding:150px 0 90px;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;inset:0;opacity:.12;pointer-events:none;background-image:radial-gradient(circle at 20% 30%, var(--dourado) 0, transparent 30%),radial-gradient(circle at 80% 70%, var(--dourado) 0, transparent 25%);}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;position:relative;z-index:2;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(201,162,39,.16);border:1px solid rgba(201,162,39,.5);color:var(--dourado-claro);padding:8px 16px;border-radius:50px;font-size:.85rem;font-weight:700;margin-bottom:22px;}
+.hero h1{font-size:3rem;line-height:1.15;margin-bottom:20px;color:#fff;}
+.hero h1 em{font-style:italic;color:var(--dourado-claro);}
+.hero p{font-size:1.1rem;color:#e6d9bd;max-width:560px;margin-bottom:28px;}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-weight:800;padding:14px 28px;border-radius:50px;cursor:pointer;border:none;transition:transform .2s, box-shadow .2s, filter .2s;font-size:1rem;}
+.btn-dourado{background:linear-gradient(135deg,var(--dourado-claro),var(--dourado));color:var(--marrom-escuro);box-shadow:0 6px 18px rgba(201,162,39,.35);}
+.btn-dourado:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(201,162,39,.5);}
+.btn-contorno{background:transparent;color:var(--dourado-claro);border:2px solid var(--dourado);}
+.btn-contorno:hover{background:rgba(201,162,39,.12);}
+.hero-badges{display:flex;gap:18px;margin-top:32px;flex-wrap:wrap;}
+.hero-badge{display:flex;align-items:center;gap:9px;font-size:.88rem;font-weight:700;color:#efe2c4;}
+.hero-badge span{color:var(--dourado-claro);font-size:1.15rem;}
+.hero-foto{border:3px dashed rgba(230,198,90,.6);border-radius:18px;min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#d8c9a8;font-weight:600;text-align:center;padding:20px;background:rgba(255,255,255,.04);}
+.hero-foto span{font-size:2.6rem;}
+
+/* SEÇÕES */
+section{padding:80px 0;}
+.section-head{text-align:center;max-width:700px;margin:0 auto 50px;}
+.section-head .kicker{color:var(--caramelo);font-weight:800;letter-spacing:2px;text-transform:uppercase;font-size:.8rem;}
+.section-head h2{font-size:2.3rem;color:var(--marrom-escuro);margin:10px 0 14px;}
+.section-head p{color:#6d5840;}
+
+/* PRODUTOS */
+.categoria-titulo{display:flex;align-items:center;gap:12px;margin:44px 0 22px;color:var(--marrom);}
+.categoria-titulo h3{font-size:1.5rem;}
+.categoria-titulo::after{content:"";flex:1;height:2px;background:linear-gradient(90deg,var(--dourado),transparent);}
+.produtos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px;}
+.card{background:var(--branco);border-radius:16px;overflow:hidden;box-shadow:var(--sombra);display:flex;flex-direction:column;transition:transform .25s, box-shadow .25s;border:1px solid #eadfc9;}
+.card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(43,28,16,.18);}
+.card-foto{height:170px;background:var(--bege);border-bottom:1px dashed #d5c39a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#a08a5f;font-weight:600;font-size:.85rem;text-align:center;padding:10px;overflow:hidden;}
+.card-foto img{object-fit:cover;width:100%;height:100%;}
+.card-foto span{font-size:2rem;}
+.card-body{padding:18px;display:flex;flex-direction:column;gap:8px;flex:1;}
+.card-body h4{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--marrom-escuro);}
+.preco-unt{font-weight:800;color:var(--marrom-escuro);font-size:1.1rem;}
+.preco-unt b{color:var(--caramelo);}
+.patamares{font-size:.82rem;color:#6d5840;display:flex;flex-direction:column;gap:5px;}
+.patamares .patamar{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;}
+.patamares .eco{display:inline-block;background:#e7f7ec;color:var(--verde);font-weight:800;font-size:.74rem;padding:2px 9px;border-radius:50px;white-space:nowrap;border:1px solid #bfe8cd;}
+.brinde{margin-top:4px;font-size:.8rem;color:#8a6d3b;background:#faf3df;border:1px dashed var(--dourado);border-radius:8px;padding:6px 10px;font-weight:700;}
+.card .btn{margin-top:auto;justify-content:center;background:var(--marrom);color:#fff;font-size:.9rem;padding:11px 18px;}
+.card .btn:hover{background:var(--caramelo);}
+.carregando-produtos{text-align:center;color:#8d7a5e;padding:40px 0;font-weight:700;}
+
+/* COMO FUNCIONA */
+.como-funciona{background:var(--bege);}
+.passos{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.passo{background:var(--branco);border-radius:16px;padding:26px 20px;text-align:center;box-shadow:var(--sombra);border-top:4px solid var(--dourado);transition:transform .25s;}
+.passo:hover{transform:translateY(-5px);}
+.passo .num{width:52px;height:52px;margin:0 auto 14px;border-radius:50%;background:linear-gradient(135deg,var(--dourado-claro),var(--dourado));color:var(--marrom-escuro);font-weight:800;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
+.passo h4{color:var(--marrom-escuro);margin-bottom:8px;font-size:1.05rem;}
+.passo p{font-size:.9rem;color:#6d5840;}
+
+/* FORMULÁRIO */
+.pedido-wrap{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;}
+.pedido-info h3{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--marrom-escuro);margin-bottom:14px;}
+.pedido-info p{color:#6d5840;margin-bottom:18px;}
+.liberdade{background:#faf3df;border:1px dashed var(--dourado);border-radius:12px;padding:14px 16px;margin-bottom:18px;font-size:.9rem;color:#6d4f1f;}
+.liberdade strong{color:var(--marrom-escuro);}
+.pedido-info .passinho{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start;}
+.pedido-info .passinho .bolinha{min-width:32px;height:32px;border-radius:50%;background:var(--marrom);color:var(--dourado-claro);display:flex;align-items:center;justify-content:center;font-weight:800;}
+.pedido-info .passinho strong{display:block;color:var(--marrom-escuro);}
+.pedido-info .passinho em{font-style:normal;font-size:.9rem;color:#6d5840;}
+form.pedido{background:var(--branco);border-radius:18px;padding:30px;box-shadow:var(--sombra);border:1px solid #eadfc9;display:flex;flex-direction:column;gap:16px;}
+.campo{display:flex;flex-direction:column;gap:6px;}
+.campo label{font-weight:800;font-size:.88rem;color:var(--marrom-escuro);}
+.campo label small{font-weight:600;color:#8d7a5e;}
+.campo input,.campo select,.campo textarea{border:2px solid #e2d5b8;border-radius:10px;padding:12px 14px;font-size:.95rem;font-family:inherit;background:#fdfaf3;transition:border-color .2s;color:var(--texto);}
+.campo input:focus,.campo select:focus,.campo textarea:focus{outline:none;border-color:var(--dourado);}
+.campo textarea{resize:vertical;min-height:90px;}
+.linha2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.linha3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.foto-box{border:2px dashed #cca43a;border-radius:12px;padding:16px;text-align:center;background:#fdfaf0;cursor:pointer;transition:.2s;}
+.foto-box:hover{background:#f8efd8;}
+.foto-box span{font-size:1.8rem;display:block;margin-bottom:4px;}
+.foto-box p{font-size:.85rem;color:#8d7a5e;font-weight:600;}
+.preview-wrap{display:none;margin-top:10px;text-align:center;}
+.preview-wrap img{max-height:160px;border-radius:10px;margin:0 auto 8px;box-shadow:var(--sombra);}
+.btn-remover-foto{background:#f3e0e0;color:#a23c3c;border:none;border-radius:8px;padding:7px 14px;font-weight:700;cursor:pointer;font-size:.82rem;}
+.btn-enviar{background:linear-gradient(135deg,#2ee06e,#1fb959);color:#fff;font-size:1.08rem;justify-content:center;box-shadow:0 8px 22px rgba(37,211,102,.35);}
+.btn-enviar:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(37,211,102,.45);}
+.nota-form{font-size:.83rem;color:#8d7a5e;text-align:center;}
+.msg-sucesso{display:none;text-align:center;background:#e7f7ec;color:#1f7a3d;font-weight:700;border-radius:10px;padding:12px;}
+
+/* AVALIAÇÕES */
+.avaliacoes-head{display:flex;align-items:center;gap:16px;justify-content:center;margin-bottom:34px;flex-wrap:wrap;}
+.media-geral{text-align:center;background:var(--branco);border:1px solid #eadfc9;border-radius:14px;padding:18px 26px;box-shadow:var(--sombra);}
+.media-geral .num{font-family:'Playfair Display',serif;font-size:2.4rem;color:var(--marrom-escuro);font-weight:700;}
+.estrelas-amarelas{color:var(--dourado);font-size:1.3rem;letter-spacing:2px;}
+.media-geral small{color:#8d7a5e;font-weight:600;}
+.avaliacoes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-bottom:44px;}
+.avaliacao{background:var(--branco);border-radius:14px;padding:20px;box-shadow:var(--sombra);border:1px solid #eadfc9;}
+.avaliacao .estrelas{color:var(--dourado);font-size:1.05rem;letter-spacing:2px;margin-bottom:8px;}
+.avaliacao p.comentario{font-size:.95rem;color:var(--texto);margin-bottom:12px;font-style:italic;}
+.avaliacao .autor{font-weight:800;color:var(--marrom-escuro);font-size:.9rem;}
+.avaliacao .data{font-size:.78rem;color:#a89474;}
+.form-avaliacao{background:var(--branco);border-radius:16px;padding:26px;box-shadow:var(--sombra);border:1px solid #eadfc9;max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
+.form-avaliacao h3{font-family:'Playfair Display',serif;color:var(--marrom-escuro);text-align:center;}
+.selecao-estrelas{display:flex;justify-content:center;gap:6px;font-size:2rem;cursor:pointer;}
+.selecao-estrelas span{transition:transform .15s;color:#d8cbb0;}
+.selecao-estrelas span.atual{color:var(--dourado);}
+.selecao-estrelas span:hover{transform:scale(1.2);}
+
+/* RODAPÉ */
+footer{background:var(--marrom-escuro);color:#e9dcbf;padding:60px 0 30px;border-top:3px solid var(--dourado);}
+.footer-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:36px;margin-bottom:34px;}
+.footer-logo img{height:54px;margin-bottom:12px;}
+.footer-logo p{font-size:.9rem;color:#cdbb97;max-width:300px;}
+footer h4{font-family:'Playfair Display',serif;color:var(--dourado-claro);margin-bottom:14px;font-size:1.1rem;}
+footer ul{list-style:none;}
+footer ul li{margin-bottom:9px;}
+footer ul a{color:#e9dcbf;text-decoration:none;font-size:.92rem;transition:color .2s;}
+footer ul a:hover{color:var(--dourado-claro);}
+.footer-bottom{border-top:1px solid rgba(230,198,90,.25);padding-top:20px;text-align:center;font-size:.85rem;color:#b8a67d;}
+.selo-seguranca{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:.8rem;color:#9fd6ae;}
+
+/* BOTÃO FLUTUANTE */
+.whats-float{position:fixed;right:22px;bottom:22px;width:60px;height:60px;border-radius:50%;background:var(--whats);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,.45);z-index:999;transition:transform .25s;text-decoration:none;color:#fff;font-size:1.7rem;}
+.whats-float:hover{transform:scale(1.1);}
+
+/* ANIMAÇÕES */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease, transform .7s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;padding-top:10px;}
+  .hero h1{font-size:2.2rem;}
+  .passos{grid-template-columns:1fr 1fr;}
+  .pedido-wrap{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  nav.desktop{display:none;}
+  .hamburger{display:flex;}
+  .linha2{grid-template-columns:1fr;}
+}
+@media (max-width:520px){
+  .passos{grid-template-columns:1fr;}
+  .linha3{grid-template-columns:1fr;}
+  .hero{padding-top:130px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header id="header">
+  <div class="nav-bar">
+    <a href="#inicio" class="brand">
+      <img src="/logo.png" alt="Logo Casal Personalizados" onerror="this.style.display='none'">
+      <span class="brand-name">CASAL PERSONALIZADOS<small>Presentes que emocionam</small></span>
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="desktop">
+      <a href="#produtos">Produtos</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#pedido">Pedido</a>
+      <a href="#avaliacoes">Avaliações</a>
+      <a href="#contato">Contato</a>
+      <a href="#" class="btn-whats-nav" id="linkWhatsNav" target="_blank" rel="noopener">WhatsApp</a>
+    </nav>
+  </div>
+  <nav class="mobile" id="menuMobile">
+    <a href="#produtos">Produtos</a>
+    <a href="#como-funciona">Como funciona</a>
+    <a href="#pedido">Pedido</a>
+    <a href="#avaliacoes">Avaliações</a>
+    <a href="#contato">Contato</a>
+    <a href="#" id="linkWhatsMobile" target="_blank" rel="noopener">Falar no WhatsApp</a>
+  </nav>
+</header>
+
+<!-- ============ HERO ============ -->
+<section id="inicio" class="hero">
+  <div class="container hero-grid">
+    <div class="reveal">
+      <span class="hero-tag" id="heroTag">✨ Presentes únicos, feitos com carinho</span>
+      <h1 id="heroTitulo">Camisetas, canecas e presentes <em>personalizados</em> para quem você ama</h1>
+      <p id="heroSubtitulo">Aceitamos qualquer tema, qualquer mensagem, a qualquer momento. Você tem total liberdade para criar o presente perfeito.</p>
+      <div class="hero-ctas">
+        <a href="#pedido" class="btn btn-dourado">🛍️ Fazer meu pedido</a>
+        <a href="#" class="btn btn-contorno" id="linkWhatsHero" target="_blank" rel="noopener">💬 Chamar no WhatsApp</a>
+      </div>
+      <div class="hero-badges">
+        <span class="hero-badge">🛡️ <span>Compra segura</span></span>
+        <span class="hero-badge">🚚 <span>Envio para todo o Brasil</span></span>
+        <span class="hero-badge">🎨 <span>100% personalizado</span></span>
+      </div>
+    </div>
+    <div class="hero-foto reveal">
+      <span>🎁</span>
+      <p>Aqui entra a foto dos produtos da marca<br>(jardim floral de girassóis e rosas)</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRODUTOS ============ -->
+<section id="produtos">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Nossos produtos</span>
+      <h2>Escolha o seu presente</h2>
+      <p>Todo produto é feito sob encomenda, com a sua foto, frase ou tema. O serviço não é por tempo limitado e não tem número fechado de pedidos — você pede quando quiser.</p>
+    </div>
+    <div id="produtosArea">
+      <p class="carregando-produtos">Carregando produtos…</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMO FUNCIONA ============ -->
+<section id="como-funciona" class="como-funciona">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Simples assim</span>
+      <h2>Como funciona</h2>
+    </div>
+    <div class="passos">
+      <div class="passo reveal"><div class="num">1</div><h4>Escolha</h4><p>Escolha o produto e a quantidade desejada na loja.</p></div>
+      <div class="passo reveal"><div class="num">2</div><h4>Personalize</h4><p>Envie sua foto, tema ou mensagem — vale qualquer ideia.</p></div>
+      <div class="passo reveal"><div class="num">3</div><h4>Aprove</h4><p>Recebemos seu pedido e aprovamos o visual com você antes de produzir.</p></div>
+      <div class="passo reveal"><div class="num">4</div><h4>Receba</h4><p>Produzimos com capricho e enviamos para sua casa.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PEDIDO ============ -->
+<section id="pedido">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Faça seu pedido</span>
+      <h2>Vamos criar juntos?</h2>
+    </div>
+    <div class="pedido-wrap">
+      <div class="pedido-info reveal">
+        <h3>Como pedir</h3>
+        <div class="liberdade">
+          <strong>🎉 Liberdade total de personalização:</strong> nosso serviço não é por tempo limitado e não tem número fechado de pedidos. Você pode pedir qualquer tema ou mensagem a qualquer momento — é só enviar sua ideia.
+        </div>
+        <div class="passinho"><span class="bolinha">1</span><div><strong>Preencha o formulário</strong><em>Escolha produto, quantidade, tamanho e texto.</em></div></div>
+        <div class="passinho"><span class="bolinha">2</span><div><strong>Envie sua foto ou ideia</strong><em>Pode anexar a imagem direto no formulário.</em></div></div>
+        <div class="passinho"><span class="bolinha">3</span><div><strong>Confirme no WhatsApp</strong><em>Combinamos tudo e aprovamos o visual com você.</em></div></div>
+        <p id="textoAtendimento" style="margin-top:18px;font-weight:700;color:var(--marrom);">⏰ Atendimento: segunda a sábado, 9h às 18h</p>
+      </div>
+
+      <form class="pedido reveal" id="formPedido">
+        <div class="msg-sucesso" id="msgSucesso">✅ Pedido enviado com sucesso! Em breve entramos em contato.</div>
+        <div class="linha2">
+          <div class="campo">
+            <label>Seu nome</label>
+            <input type="text" id="pedidoNome" placeholder="Como podemos te chamar?" required>
+          </div>
+          <div class="campo">
+            <label>WhatsApp <small>(com DDD)</small></label>
+            <input type="tel" id="pedidoWhats" placeholder="(11) 99999-9999" required>
+          </div>
+        </div>
+        <div class="linha3">
+          <div class="campo">
+            <label>Produto</label>
+            <select id="pedidoProduto" required><option value="">Selecione…</option></select>
+          </div>
+          <div class="campo">
+            <label>Quantidade</label>
+            <input type="number" id="pedidoQuantidade" min="1" value="1" required>
+          </div>
+          <div class="campo">
+            <label>Tamanho</label>
+            <select id="pedidoTamanho">
+              <option value="">Não se aplica</option>
+              <option>P</option><option>M</option><option>G</option><option>GG</option>
+            </select>
+          </div>
+        </div>
+        <div class="campo">
+          <label>Mensagem / tema da personalização</label>
+          <textarea id="pedidoTexto" placeholder="Ex: Nome do casal + data, ou 'Melhor pai do mundo', ou seu tema criativo…"></textarea>
+        </div>
+        <div class="campo">
+          <label>Foto ou referência <small>(opcional)</small></label>
+          <label class="foto-box" for="pedidoFoto">
+            <span>📷</span>
+            <p>Clique para anexar sua foto</p>
+          </label>
+          <input type="file" id="pedidoFoto" accept="image/*" style="display:none;">
+          <div class="preview-wrap" id="previewWrap">
+            <img id="previewImg" alt="Prévia da foto">
+            <button type="button" class="btn-remover-foto" id="btnRemoverFoto">Remover foto</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-enviar">Enviar pedido pelo site 🚀</button>
+        <p class="nota-form">Após enviar, finalizamos o orçamento com você pelo WhatsApp. 💬</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AVALIAÇÕES ============ -->
+<section id="avaliacoes" class="como-funciona">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Clientes felizes</span>
+      <h2>Avaliações de quem já comprou</h2>
+    </div>
+    <div class="avaliacoes-head reveal">
+      <div class="media-geral">
+        <div class="num" id="mediaNum">5.0</div>
+        <div class="estrelas-amarelas" id="mediaEstrelas">★★★★★</div>
+        <small id="mediaCount">0 avaliações</small>
+      </div>
+    </div>
+    <div class="avaliacoes-grid" id="avaliacoesGrid"></div>
+
+    <form class="form-avaliacao reveal" id="formAvaliacao">
+      <h3>Deixe sua avaliação 💛</h3>
+      <div class="campo">
+        <label>Seu nome</label>
+        <input type="text" id="avNome" placeholder="Seu nome" required>
+      </div>
+      <div class="campo">
+        <label>Sua nota</label>
+        <div class="selecao-estrelas" id="selecaoEstrelas">
+          <span data-valor="1">★</span><span data-valor="2">★</span><span data-valor="3">★</span><span data-valor="4">★</span><span data-valor="5">★</span>
+        </div>
+      </div>
+      <div class="campo">
+        <label>Comentário</label>
+        <textarea id="avComentario" placeholder="Conte como foi sua experiência…" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-dourado" style="justify-content:center;">Enviar avaliação</button>
+      <p class="nota-form">Sua avaliação aparece na loja após aprovação.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ RODAPÉ ============ -->
+<footer id="contato">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-logo">
+        <img src="/logo.png" alt="Logo" onerror="this.style.display='none'">
+        <p>Presentes personalizados com qualidade e carinho, cuidadosamente planejados para emocionar quem você ama.</p>
+        <div class="selo-seguranca">🔒 Compra segura e atendimento próximo</div>
+      </div>
+      <div>
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="#produtos">Produtos</a></li>
+          <li><a href="#como-funciona">Como funciona</a></li>
+          <li><a href="#pedido">Fazer pedido</a></li>
+          <li><a href="#avaliacoes">Avaliações</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <ul>
+          <li><a href="#" id="linkWhatsFooter" target="_blank" rel="noopener">💬 WhatsApp</a></li>
+          <li id="textoAtendimentoFooter">⏰ Segunda a sábado, 9h às 18h</li>
+          <li>📦 Envio para todo o Brasil</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© <span id="anoAtual"></span> CASAL PERSONALIZADOS · Todos os direitos reservados</div>
+  </div>
+</footer>
+
+<a href="#" class="whats-float" id="whatsFloat" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">💬</a>
+
+<script>
+/* =========================================================
+   CASAL PERSONALIZADOS — Frontend da loja
+   ========================================================= */
+var whatsappPadrao = '5511999999999'; // ← troque quando configurar no admin
+var settings = {};
+var produtosGlobais = [];
+
+/* ---------- UTILITÁRIOS ---------- */
+function formatarTelefoneWhats(digitos) {
+  return 'https://wa.me/' + (digitos || whatsappPadrao).replace(/\D/g, '');
+}
+function atualizarLinksWhats() {
+  var link = formatarTelefoneWhats(settings.whatsapp);
+  ['linkWhatsNav','linkWhatsMobile','linkWhatsHero','linkWhatsFooter','whatsFloat'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.href = link;
+  });
+}
+function escaparHTML(texto) {
+  if (!texto) return '';
+  return String(texto).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ---------- FORMATAR PATAMARES (com selo "Economize R$ X") ---------- */
+function formatarPatamares(texto) {
+  if (!texto) return '';
+  var partes = texto.split('|').map(function (s) { return s.trim(); }).filter(Boolean);
+  var html = '';
+  partes.forEach(function (parte) {
+    var eco = parte.match(/\(economize\s+([^)]*)\)/i);
+    if (eco) {
+      var limpo = parte.replace(/\(economize\s+([^)]*)\)/i, '').trim();
+      var econ = eco[1].trim();
+      if (limpo) html += '<span class="patamar">' + escaparHTML(limpo) + ' <b class="eco">Economize ' + escaparHTML(econ) + '</b></span>';
+      else html += '<span class="patamar"><b class="eco">Economize ' + escaparHTML(econ) + '</b></span>';
+    } else {
+      html += '<span class="patamar">' + escaparHTML(parte) + '</span>';
+    }
+  });
+  return html;
+}
+
+/* ---------- CARREGAR CONFIGURAÇÕES ---------- */
+function carregarSettings() {
+  return fetch('/api/settings')
+    .then(function (r) { return r.json(); })
+    .then(function (s) {
+      settings = s || {};
+      document.title = s.site_nome ? s.site_nome + ' — Presentes únicos' : document.title;
+      if (s.hero_tag) document.getElementById('heroTag').textContent = s.hero_tag;
+      if (s.hero_titulo) document.getElementById('heroTitulo').innerHTML = s.hero_titulo;
+      if (s.hero_subtitulo) document.getElementById('heroSubtitulo').textContent = s.hero_subtitulo;
+      if (s.atendimento) {
+        document.getElementById('textoAtendimento').textContent = '⏰ ' + s.atendimento;
+        document.getElementById('textoAtendimentoFooter').textContent = '⏰ ' + s.atendimento;
+      }
+      atualizarLinksWhats();
+      return s;
+    })
+    .catch(function () { atualizarLinksWhats(); });
+}
+
+/* ---------- CARREGAR PRODUTOS ---------- */
+function carregarProdutos() {
+  return fetch('/api/products')
+    .then(function (r) { return r.json(); })
+    .then(function (produtos) {
+      produtosGlobais = produtos || [];
+      var area = document.getElementById('produtosArea');
+      area.innerHTML = '';
+
+      var ordemCategorias = ['Camisetas','Canecas','Moletons','Quadros','Outros'];
+      var emojiCategoria = { 'Camisetas':'👕', 'Canecas':'☕', 'Moletons':'🧥', 'Quadros':'🖼️', 'Outros':'🎁' };
+
+      ordemCategorias.forEach(function (categoria) {
+        var daCategoria = produtosGlobais.filter(function (p) { return p.categoria === categoria; });
+        if (!daCategoria.length) return;
+
+        var secao = document.createElement('div');
+        secao.className = 'categoria-titulo reveal';
+        secao.innerHTML = '<span style="font-size:1.6rem;">' + (emojiCategoria[categoria] || '🎁') + '</span><h3>' + escaparHTML(categoria) + '</h3>';
+
+        var grid = document.createElement('div');
+        grid.className = 'produtos-grid';
+
+        daCategoria.forEach(function (p) {
+          var card = document.createElement('div');
+          card.className = 'card reveal';
+
+          var fotoHtml = p.foto
+            ? '<img src="' + escaparHTML(p.foto) + '" alt="' + escaparHTML(p.nome) + '" loading="lazy">'
+            : '<span>' + (emojiCategoria[categoria] || '🛍️') + '</span><small>' + escaparHTML(categoria) + '</small>';
+
+          card.innerHTML =
+            '<div class="card-foto">' + fotoHtml + '</div>' +
+            '<div class="card-body">' +
+              '<h4>' + escaparHTML(p.nome) + '</h4>' +
+              '<div class="preco-unt">' + escaparHTML(p.preco) + '</div>' +
+              (p.detalhes ? '<div class="patamares">' + formatarPatamares(p.detalhes) + '</div>' : '') +
+              (p.brinde ? '<div class="brinde">' + escaparHTML(p.brinde) + '</div>' : '') +
+              '<button class="btn" data-produto="' + p.id + '">Encomendar este 🛒</button>' +
+            '</div>';
+
+          card.querySelector('button').addEventListener('click', function () {
+            var sel = document.getElementById('pedidoProduto');
+            sel.value = p.id;
+            document.getElementById('pedido').scrollIntoView({ behavior: 'smooth' });
+          });
+
+          grid.appendChild(card);
+        });
+
+        area.appendChild(secao);
+        area.appendChild(grid);
+      });
+
+      if (!area.children.length) {
+        area.innerHTML = '<p class="carregando-produtos">Nenhum produto cadastrado ainda. Cadastre pelo painel admin.</p>';
+      }
+      preencherSelectProdutos();
+      observarReveal();
+    })
+    .catch(function () {
+      document.getElementById('produtosArea').innerHTML = '<p class="carregando-produtos">Não foi possível carregar os produtos.</p>';
+    });
+}
+
+/* ---------- SELECT DE PRODUTOS NO FORMULÁRIO ---------- */
+function preencherSelectProdutos() {
+  var sel = document.getElementById('pedidoProduto');
+  var atual = sel.value;
+  sel.innerHTML = '<option value="">Selecione…</option>';
+  produtosGlobais.forEach(function (p) {
+    var opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.nome + (p.categoria ? ' (' + p.categoria + ')' : '');
+    sel.appendChild(opt);
+  });
+  sel.value = atual;
+}
+
+/* ---------- PREVIEW DE FOTO ---------- */
+var arquivoFoto = null;
+document.getElementById('pedidoFoto').addEventListener('change', function (e) {
+  arquivoFoto = e.target.files[0] || null;
+  if (!arquivoFoto) return;
+  if (arquivoFoto.size > 5 * 1024 * 1024) {
+    alert('A foto precisa ter no máximo 5MB. Escolha outra.');
+    this.value = '';
+    arquivoFoto = null;
+    return;
+  }
+  var leitor = new FileReader();
+  leitor.onload = function (ev) {
+    document.getElementById('previewImg').src = ev.target.result;
+    document.getElementById('previewWrap').style.display = 'block';
+  };
+  leitor.readAsDataURL(arquivoFoto);
+});
+document.getElementById('btnRemoverFoto').addEventListener('click', function () {
+  arquivoFoto = null;
+  document.getElementById('pedidoFoto').value = '';
+  document.getElementById('previewWrap').style.display = 'none';
+});
+
+/* ---------- ENVIO DO PEDIDO ---------- */
+document.getElementById('formPedido').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  var dados = {
+    nome: document.getElementById('pedidoNome').value.trim(),
+    whatsapp: document.getElementById('pedidoWhats').value.trim(),
+    produto: document.getElementById('pedidoProduto').value,
+    quantidade: parseInt(document.getElementById('pedidoQuantidade').value, 10) || 1,
+    tamanho: document.getElementById('pedidoTamanho').value,
+    texto: document.getElementById('pedidoTexto').value.trim()
+  };
+  if (!dados.produto) { alert('Selecione um produto.'); return; }
+  var btn = e.target.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+  try {
+    await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados)
+    });
+    document.getElementById('msgSucesso').style.display = 'block';
+    e.target.reset();
+    arquivoFoto = null;
+    document.getElementById('previewWrap').style.display = 'none';
+    setTimeout(function () { document.getElementById('msgSucesso').style.display = 'none'; }, 6000);
+  } catch (err) {
+    alert('Não foi possível enviar o pedido. Tente novamente ou chame no WhatsApp.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Enviar pedido pelo site 🚀';
+  }
+});
+
+/* ---------- AVALIAÇÕES ---------- */
+var notaEscolhida = 5;
+document.querySelectorAll('#selecaoEstrelas span').forEach(function (span) {
+  span.addEventListener('click', function () {
+    notaEscolhida = parseInt(this.dataset.valor, 10);
+    document.querySelectorAll('#selecaoEstrelas span').forEach(function (s) {
+      s.classList.toggle('atual', parseInt(s.dataset.valor, 10) <= notaEscolhida);
+    });
+  });
+});
+
+function carregarAvaliacoes() {
+  return fetch('/api/reviews')
+    .then(function (r) { return r.json(); })
+    .then(function (avaliacoes) {
+      avaliacoes = avaliacoes || [];
+      var grid = document.getElementById('avaliacoesGrid');
+      grid.innerHTML = '';
+      if (!avaliacoes.length) {
+        grid.innerHTML = '<p style="text-align:center;color:#8d7a5e;grid-column:1/-1;font-weight:700;">Seja o primeiro a avaliar! 💛</p>';
+        document.getElementById('mediaNum').textContent = '5.0';
+        document.getElementById('mediaEstrelas').textContent = '★★★★★';
+        document.getElementById('mediaCount').textContent = '0 avaliações';
+        return;
+      }
+      var soma = avaliacoes.reduce(function (acc, a) { return acc + Number(a.estrelas || 5); }, 0);
+      var media = soma / avaliacoes.length;
+      document.getElementById('mediaNum').textContent = media.toFixed(1).replace('.', ',');
+      document.getElementById('mediaEstrelas').textContent = '★'.repeat(Math.round(media)) + '☆'.repeat(5 - Math.round(media));
+      document.getElementById('mediaCount').textContent = avaliacoes.length + (avaliacoes.length === 1 ? ' avaliação' : ' avaliações');
+
+      avaliacoes.forEach(function (a) {
+        var div = document.createElement('div');
+        div.className = 'avaliacao reveal';
+        div.innerHTML =
+          '<div class="estrelas">' + '★'.repeat(a.estrelas) + '☆'.repeat(5 - a.estrelas) + '</div>' +
+          '<p class="comentario">"' + escaparHTML(a.comentario) + '"</p>' +
+          '<div class="autor">' + escaparHTML(a.nome) + '</div>' +
+          (a.data ? '<div class="data">' + escaparHTML(a.data) + '</div>' : '');
+        grid.appendChild(div);
+      });
+      observarReveal();
+    })
+    .catch(function () {});
+}
+
+document.getElementById('formAvaliacao').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  var dados = {
+    nome: document.getElementById('avNome').value.trim(),
+    estrelas: notaEscolhida,
+    comentario: document.getElementById('avComentario').value.trim()
+  };
+  if (!dados.nome || !dados.comentario) { alert('Preencha nome e comentário.'); return; }
+  try {
+    await fetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados)
+    });
+    e.target.reset();
+    document.getElementById('formAvaliacao').querySelector('h3').textContent = '✅ Avaliação enviada! Obrigado 💛';
+    setTimeout(function () {
+      document.getElementById('formAvaliacao').querySelector('h3').textContent = 'Deixe sua avaliação 💛';
+      notaEscolhida = 5;
+      document.querySelectorAll('#selecaoEstrelas span').forEach(function (s) {
+        s.classList.toggle('atual', parseInt(s.dataset.valor, 10) <= 5);
+      });
+    }, 6000);
+  } catch (err) {
+    alert('Não foi possível enviar a avaliação. Tente novamente.');
+  }
+});
+
+/* ---------- HEADER SCROLL / MENU MOBILE / ANIMAÇÕES ---------- */
+window.addEventListener('scroll', function () {
+  document.getElementById('header').classList.toggle('scrolled', window.scrollY > 40);
+});
+document.getElementById('hamburger').addEventListener('click', function () {
+  document.getElementById('menuMobile').classList.toggle('open');
+});
+document.querySelectorAll('nav.mobile a').forEach(function (a) {
+  a.addEventListener('click', function () {
+    document.getElementById('menuMobile').classList.remove('open');
+  });
+});
+
+var observerReveal = null;
+function observarReveal() {
+  var itens = document.querySelectorAll('.reveal:not(.visible)');
+  if (!itens.length) return;
+  if (!observerReveal) {
+    observerReveal = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (entrada) {
+        if (entrada.isIntersecting) {
+          entrada.target.classList.add('visible');
+          observerReveal.unobserve(entrada.target);
+        }
+      });
+    }, { threshold: 0.12 });
+  }
+  itens.forEach(function (item) { observerReveal.observe(item); });
+}
+
+/* ---------- INICIALIZAÇÃO ---------- */
+document.getElementById('anoAtual').textContent = new Date().getFullYear();
+observarReveal();
+carregarSettings().then(function () { carregarProdutos(); });
+carregarAvaliacoes();
+</script>
+</body>
+</html>
