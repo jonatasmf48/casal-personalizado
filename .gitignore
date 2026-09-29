@@ -4,4 +4,7 @@ data.db
 data.db-journal
 data.db-wal
 data.db-shm
+data.db.bkp
+*.db.bkp
 uploads/
+Novo(a) Documento de Texto.txt
