@@ -1,20 +1,26 @@
-# Casal Personalizados — Loja + Painel Admin
+# CASAL PERSONALIZADOS — Loja online
 
-## Subir localmente
-1. Instale o Node.js (nodejs.org)
-2. Abra a pasta no VS Code e rode no terminal:
-   npm install
-   npm start
-3. Acesse:
-   - Loja:  http://localhost:3000
-   - Admin: http://localhost:3000/admin  (admin / admin123 — troque no painel!)
+Loja de produtos personalizados (camisetas, canecas, moletons, quadros).
 
-## Subir na nuvem (gratuito/baixo custo)
-- Render (grátis para começar): novo Web Service, apontando para seu repositório
-- Railway (a partir de alguns dólares/mês, com disco persistente): `railway up`
-- Em ambos: variável de ambiente PORT (eles cuidam), SESSION_SECRET, ADMIN_INITIAL_PASSWORD
+## Stack
+- Node.js 22.5+ (SQLite nativo `node:sqlite`) · Express · SQLite
+- HTML/CSS/JS puro + Swiper.js
+- Integração Google: Apps Script (Sheets, Agenda, E-mail)
 
-## Atenção
-- Nunca publique o arquivo .env ou o data.db no GitHub
-- Troque a senha do admin no primeiro acesso
-- Todos os dados ficam no arquivo data.db — faça backup dele com frequência
+## Rodar localmente
+1. `npm install`
+2. Copie `.env.example` para `.env` e preencha o `SESSION_SECRET`
+3. `npm run dev` → http://localhost:3000
+4. Admin: http://localhost:3000/admin (login `admin` / senha do `.env`)
+
+## Deploy (Railway)
+1. Suba o repositório no GitHub
+2. Railway → New Project → Deploy from GitHub repo
+3. Em Variables, adicione: `PORT` (Railway injeta), `SESSION_SECRET`, `ADMIN_INITIAL_PASSWORD`
+4. Domínio via Railway → Settings → Networking → Generate Domain
+5. Aponte o domínio do Registro.br (CNAME) se quiser domínio próprio
+
+## Segurança
+- Troque a senha do admin logo no primeiro acesso
+- `.env` e `data.db` NUNCA vão para o GitHub
+- WhatsApp padrão: 555194222647 (configurável no painel)

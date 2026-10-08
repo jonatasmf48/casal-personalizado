@@ -1,10 +1,35 @@
+# Dependências
 node_modules/
+
+# Ambiente e segredos
 .env
+.env.local
+.env.production
+
+# Banco de dados (inclui backups — evita vazar pedidos)
 data.db
-data.db-journal
-data.db-wal
-data.db-shm
 data.db.bkp
-*.db.bkp
-uploads/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Uploads locais
+uploads/*.png
+uploads/*.jpg
+uploads/*.jpeg
+uploads/*.webp
+uploads/*.gif
+!uploads/.gitkeep
+
+# Logs e SO
+npm-debug.log*
+*.log
+.DS_Store
+Thumbs.db
+
+# Backup/editors
+*.bkp
 Novo(a) Documento de Texto.txt

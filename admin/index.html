@@ -5,375 +5,816 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Casal Personalizados</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --marrom-escuro:#2b1c10; --marrom:#4a2f1a; --caramelo:#8a5a33;
-    --dourado:#c9a227; --dourado-claro:#e6c65a; --creme:#f9f4eb; --bege:#f1e7d3;
-    --texto:#3a2a1b; --branco:#ffffff; --verde:#2e7d32; --vermelho:#b03333; --sombra:0 8px 30px rgba(43,28,16,.12);
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Nunito Sans',sans-serif;color:var(--texto);background:var(--creme);min-height:100vh;}
-  h1,h2,h3{font-family:'Playfair Display',serif;}
-  .container{max-width:1080px;margin:0 auto;padding:0 20px;}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:800;padding:12px 22px;border-radius:50px;cursor:pointer;border:none;transition:transform .2s, box-shadow .2s;font-size:.95rem;text-decoration:none;}
-  .btn-dourado{background:linear-gradient(135deg,var(--dourado-claro),var(--dourado));color:var(--marrom-escuro);}
-  .btn-dourado:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(201,162,39,.4);}
-  .btn-outline{background:transparent;color:var(--marrom);border:2px solid var(--caramelo);}
-  .btn-contorno{background:transparent;color:var(--dourado-claro);border:2px solid var(--dourado);}
-  .btn-verde{background:var(--verde);color:#fff;}
-  .btn-verde:hover{filter:brightness(1.1);}
-  .btn-vermelho{background:var(--vermelho);color:#fff;}
-  .btn-vermelho:hover{filter:brightness(1.1);}
-  .campo{display:flex;flex-direction:column;gap:6px;}
-  .campo label{font-weight:800;font-size:.85rem;color:var(--marrom-escuro);}
-  .campo input,.campo select,.campo textarea{border:2px solid #e2d5b8;border-radius:10px;padding:11px 14px;font-size:.95rem;font-family:inherit;background:#fdfaf3;transition:border-color .2s;color:var(--texto);}
-  .campo input:focus,.campo select:focus,.campo textarea:focus{outline:none;border-color:var(--dourado);}
-  .erro{color:var(--vermelho);font-weight:700;text-align:center;min-height:22px;font-size:.9rem;}
-  .msg{color:var(--verde);font-weight:700;text-align:center;min-height:22px;font-size:.9rem;}
-
-  .tela-login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--marrom-escuro) 0%,#3a2513 60%,#57371c 100%);padding:20px;}
-  .card-login{background:var(--creme);border-radius:18px;padding:36px 30px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.4);display:flex;flex-direction:column;gap:14px;border-top:5px solid var(--dourado);}
-  .card-login h1{font-size:1.3rem;text-align:center;color:var(--marrom-escuro);}
-  .card-login p{text-align:center;color:var(--caramelo);font-weight:700;margin-bottom:6px;}
-
-  .painel-topo{background:var(--marrom-escuro);color:#f3ead6;padding:22px 0;border-bottom:3px solid var(--dourado);}
-  .painel-topo .container{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-  .painel-topo h1{color:var(--dourado-claro);}
-  .topo-acoes{display:flex;gap:10px;}
-
-  .abas{background:var(--bege);border-bottom:1px solid #d5c39a;position:sticky;top:0;z-index:50;}
-  .abas .container{display:flex;gap:4px;overflow-x:auto;padding-top:8px;}
-  .aba{background:none;border:none;padding:12px 16px;font-weight:800;color:var(--marrom);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;font-size:.92rem;}
-  .aba.ativa{border-bottom-color:var(--dourado);color:var(--caramelo);}
-  .badge{background:var(--vermelho);color:#fff;border-radius:50px;padding:1px 8px;font-size:.75rem;display:none;}
-
-  .conteudo-aba{display:none;padding:34px 0 60px;}
-  .conteudo-aba.ativa{display:block;}
-  .conteudo-aba h2{color:var(--marrom-escuro);margin-bottom:6px;}
-  .dica{color:#6d5840;margin-bottom:24px;font-size:.92rem;}
-
-  .lista-cards{display:flex;flex-direction:column;gap:14px;margin-bottom:30px;}
-  .card{background:var(--branco);border-radius:14px;padding:18px 20px;box-shadow:var(--sombra);border:1px solid #eadfc9;}
-  .card h3{color:var(--marrom-escuro);font-size:1.05rem;margin-bottom:4px;}
-  .card p{font-size:.9rem;color:#5a4732;}
-  .card .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:#8d7a5e;font-weight:700;margin:8px 0;}
-  .pedido-status{display:inline-block;padding:3px 12px;border-radius:50px;font-size:.78rem;font-weight:800;}
-  .status-novo{background:#fdefdc;color:#a05a10;}
-  .status-emproducao{background:#e3edff;color:#1f4fa0;}
-  .status-enviado{background:#e7f7ec;color:#1f7a3d;}
-  .status-concluido{background:#f1e7d3;color:#5a4732;}
-  .status-cancelado{background:#f3e0e0;color:#a23c3c;}
-  .card .acoes{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
-  .form-produto,.form-config{display:flex;flex-direction:column;gap:14px;margin-bottom:26px;}
-  .grade2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .acoes-form{display:flex;gap:10px;}
-  .avaliacao-nome{font-weight:800;color:var(--marrom-escuro);}
-  .estrelas{color:var(--dourado);letter-spacing:2px;}
-  .empty{text-align:center;color:#8d7a5e;padding:30px;font-weight:700;}
-  @media (max-width:640px){ .grade2{grid-template-columns:1fr;} }
+/* =========================================================
+   CASAL PERSONALIZADOS — Painel Admin (Dashboard Premium)
+   ========================================================= */
+:root{
+  --marrom-escuro:#2b1c10; --marrom:#4a2f1a; --caramelo:#8a5a33;
+  --dourado:#c9a227; --dourado-claro:#e6c65a; --creme:#f9f4eb; --bege:#f1e7d3;
+  --texto:#3a2a1b; --branco:#ffffff; --verde:#2e7d32; --vermelho:#b03333;
+  --sombra:0 8px 30px rgba(43,28,16,.12); --sombra-suave:0 2px 10px rgba(43,28,16,.06);
+  --raio:16px; --raio-menor:12px; --whats:#25D366;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito Sans',sans-serif;color:var(--texto);background:var(--creme);min-height:100vh;-webkit-tap-highlight-color:transparent;}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;}
+a{text-decoration:none;}
+::selection{background:var(--dourado);color:var(--marrom-escuro);}
+/* BOTÕES */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:800;padding:12px 22px;border-radius:50px;cursor:pointer;border:none;transition:transform .2s,box-shadow .2s,filter .2s;font-size:.95rem;font-family:'Nunito Sans',sans-serif;white-space:nowrap;}
+.btn:active{transform:scale(.97);}
+.btn-dourado{background:linear-gradient(135deg,var(--dourado-claro),var(--dourado));color:var(--marrom-escuro);box-shadow:0 6px 16px rgba(201,162,39,.3);}
+.btn-dourado:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(201,162,39,.45);}
+.btn-outline{background:transparent;color:var(--marrom);border:2px solid var(--caramelo);}
+.btn-outline:hover{background:rgba(138,90,51,.08);border-color:var(--marrom);transform:translateY(-2px);}
+.btn-contorno{background:transparent;color:var(--dourado-claro);border:2px solid rgba(230,198,90,.55);}
+.btn-contorno:hover{background:rgba(201,162,39,.15);transform:translateY(-2px);}
+.btn-verde{background:var(--verde);color:#fff;box-shadow:0 5px 14px rgba(46,125,50,.25);}
+.btn-verde:hover{filter:brightness(1.1);transform:translateY(-2px);}
+.btn-vermelho{background:var(--vermelho);color:#fff;box-shadow:0 5px 14px rgba(176,51,51,.22);}
+.btn-vermelho:hover{background:#922b2b;transform:translateY(-2px);}
+.btn-whats{background:var(--whats);color:#fff !important;box-shadow:0 5px 14px rgba(37,211,102,.3);}
+.btn-whats:hover{background:#20ba5a;transform:translateY(-2px);}
+.btn-pequeno{padding:8px 14px;font-size:.82rem;}
+/* LOGIN */
+.tela-login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--marrom-escuro) 0%,#3a2513 55%,#57371c 100%);padding:20px;position:relative;overflow:hidden;}
+.tela-login::before{content:"";position:absolute;inset:0;opacity:.14;pointer-events:none;background-image:radial-gradient(circle at 18% 25%,var(--dourado) 0,transparent 32%),radial-gradient(circle at 82% 75%,var(--dourado) 0,transparent 26%);}
+.card-login{position:relative;z-index:2;background:var(--creme);border-radius:22px;padding:40px 32px;width:100%;max-width:400px;box-shadow:0 24px 70px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:14px;border-top:5px solid var(--dourado);animation:subir .5s ease;}
+@keyframes subir{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.login-marca{text-align:center;margin-bottom:4px;}
+.login-marca .marca-nome{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--marrom-escuro);}
+.login-marca .marca-sub{color:var(--caramelo);font-weight:700;font-size:.82rem;letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+/* CAMPOS */
+.campo{display:flex;flex-direction:column;gap:7px;}
+.campo label{font-weight:800;font-size:.84rem;color:var(--marrom-escuro);}
+.campo label .opcional{font-weight:400;color:#8d7a5e;font-size:.78rem;}
+.campo input,.campo select,.campo textarea{width:100%;border:2px solid #e2d5b8;border-radius:var(--raio-menor);padding:12px 14px;font-size:.95rem;font-family:'Nunito Sans',sans-serif;background:#fdfcf9;transition:border-color .2s,box-shadow .2s;color:var(--texto);}
+.campo input:focus,.campo select:focus,.campo textarea:focus{outline:none;border-color:var(--dourado);background:var(--branco);box-shadow:0 0 0 4px rgba(201,162,39,.16);}
+.campo textarea{resize:vertical;min-height:80px;}
+.campo input[type="file"]{padding:10px 12px;border-style:dashed;border-color:var(--caramelo);background:#fdfaf3;cursor:pointer;color:#8d7a5e;font-size:.88rem;}
+.campo input[type="file"]:hover{background:#f8efd8;border-color:var(--dourado);}
+.campo input[type="file"]::file-selector-button{background:linear-gradient(135deg,var(--dourado-claro),var(--dourado));color:var(--marrom-escuro);font-weight:800;font-family:'Nunito Sans',sans-serif;font-size:.85rem;border:none;border-radius:50px;padding:9px 18px;margin-right:12px;cursor:pointer;}
+.campo small,.dica-menor{color:#8d7a5e;font-size:.82rem;line-height:1.4;}
+.campo img[alt="Prévia da foto"]{max-height:130px;border-radius:10px;margin-top:8px;box-shadow:var(--sombra-suave);border:1px solid #eadfc9;object-fit:contain;background:#fff;}
+.erro{color:var(--vermelho);font-weight:700;text-align:center;min-height:22px;font-size:.9rem;}
+.msg{color:var(--verde);font-weight:700;text-align:center;min-height:22px;font-size:.9rem;}
+.grade2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.acoes-form{display:flex;gap:10px;flex-wrap:wrap;}
+/* PAINEL / SIDEBAR */
+.painel{min-height:100vh;}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:268px;z-index:1200;background:linear-gradient(180deg,var(--marrom-escuro) 0%,#1f140b 100%);display:flex;flex-direction:column;padding:26px 18px 20px;border-right:1px solid rgba(201,162,39,.35);box-shadow:6px 0 30px rgba(43,28,16,.18);transition:transform .3s ease;}
+.sidebar-marca{padding:0 8px 22px;border-bottom:1px solid rgba(230,198,90,.22);margin-bottom:18px;}
+.sidebar-marca .marca-nome{font-family:'Playfair Display',serif;font-size:1.12rem;font-weight:700;color:var(--dourado-claro);letter-spacing:.5px;line-height:1.15;}
+.sidebar-marca .marca-sub{display:block;font-family:'Nunito Sans',sans-serif;font-size:.68rem;color:#b8a67d;letter-spacing:2px;text-transform:uppercase;margin-top:5px;}
+.sidebar-nav{display:flex;flex-direction:column;gap:6px;flex:1;overflow-y:auto;}
+.aba{display:flex;align-items:center;gap:12px;width:100%;background:transparent;border:none;border-radius:12px;padding:13px 14px;font-weight:800;font-size:.96rem;color:#d8c9a8;cursor:pointer;text-align:left;font-family:'Nunito Sans',sans-serif;transition:background .2s,color .2s;}
+.aba:hover{background:rgba(201,162,39,.12);color:var(--dourado-claro);}
+.aba.ativa{background:linear-gradient(135deg,rgba(201,162,39,.28),rgba(201,162,39,.12));color:var(--dourado-claro);box-shadow:inset 3px 0 0 var(--dourado);}
+.badge{background:var(--vermelho);color:#fff;border-radius:50px;padding:2px 9px;font-size:.72rem;font-weight:800;margin-left:auto;display:none;}
+.sidebar-rodape{display:flex;flex-direction:column;gap:10px;padding-top:16px;border-top:1px solid rgba(230,198,90,.22);margin-top:12px;}
+.sidebar-rodape .btn{width:100%;}
+.sidebar-overlay{position:fixed;inset:0;background:rgba(20,10,2,.55);z-index:1190;opacity:0;pointer-events:none;transition:opacity .3s;}
+.painel.sidebar-aberta .sidebar-overlay{opacity:1;pointer-events:auto;}
+.conteudo{margin-left:268px;min-height:100vh;display:flex;flex-direction:column;}
+.topbar{position:sticky;top:0;z-index:1100;background:rgba(249,244,235,.92);backdrop-filter:blur(8px);border-bottom:1px solid #e8dcc4;padding:14px 28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.hamburger{display:none;background:var(--marrom-escuro);color:var(--dourado-claro);border:none;border-radius:10px;width:44px;height:44px;font-size:1.25rem;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;}
+.hamburger:hover{background:var(--marrom);}
+.topbar-titulo{font-size:1.25rem;color:var(--marrom-escuro);font-weight:700;}
+.topbar-acoes{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap;}
+.conteudo-inner{flex:1;padding:30px 32px 60px;max-width:1200px;width:100%;}
+.conteudo-aba{display:none;animation:surgir .3s ease;}
+.conteudo-aba.ativa{display:block;}
+@keyframes surgir{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.conteudo-aba h2{color:var(--marrom-escuro);font-size:1.7rem;margin-bottom:6px;}
+.dica{color:#6d5840;margin-bottom:26px;font-size:.94rem;max-width:720px;}
+/* FERRAMENTAS DE PEDIDOS (busca + filtro) */
+.pedidos-ferramentas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
+.busca-pedidos{flex:1;min-width:200px;position:relative;}
+.busca-pedidos input{width:100%;border:2px solid #e2d5b8;border-radius:50px;padding:11px 18px;font-size:.95rem;font-family:'Nunito Sans',sans-serif;background:var(--branco);color:var(--texto);transition:border-color .2s,box-shadow .2s;}
+.busca-pedidos input:focus{outline:none;border-color:var(--dourado);box-shadow:0 0 0 4px rgba(201,162,39,.16);}
+.filtro-status{border:2px solid #e2d5b8;border-radius:50px;padding:10px 16px;font-size:.9rem;font-weight:700;font-family:'Nunito Sans',sans-serif;background:var(--branco);color:var(--marrom);cursor:pointer;}
+.filtro-status:focus{outline:none;border-color:var(--dourado);}
+.pedidos-contador{font-size:.85rem;color:#8d7a5e;font-weight:700;}
+/* CARDS */
+.lista-cards{display:flex;flex-direction:column;gap:14px;margin-bottom:30px;}
+.card{background:var(--branco);border-radius:var(--raio);padding:20px 22px;box-shadow:var(--sombra-suave);border:1px solid #eadfc9;transition:transform .2s,box-shadow .2s,border-color .2s;}
+.card:hover{transform:translateY(-3px);box-shadow:var(--sombra);border-color:#dbc9a4;}
+.card h3{color:var(--marrom-escuro);font-size:1.08rem;margin-bottom:5px;}
+.card p{font-size:.92rem;color:#5a4732;line-height:1.5;}
+.card .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:#8d7a5e;font-weight:700;margin:10px 0 4px;}
+.card .acoes{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.card .acoes .btn{font-size:.84rem;padding:9px 14px;}
+.numero-pedido{display:inline-block;background:var(--marrom);color:var(--dourado-claro);font-weight:800;font-size:.82rem;padding:4px 12px;border-radius:50px;margin-bottom:8px;}
+.selo-google{display:inline-block;background:#e7f7ec;color:#1f7a3d;font-weight:800;font-size:.72rem;padding:3px 10px;border-radius:50px;border:1px solid #bfe8cd;margin-left:8px;}
+.selo-google.pendente{background:#fdefdc;color:#a05a10;border-color:#f3d3a5;}
+.pedido-status{display:inline-block;padding:4px 13px;border-radius:50px;font-size:.78rem;font-weight:800;border:1px solid transparent;}
+.status-novo{background:#fdefdc;color:#a05a10;border-color:#f3d3a5;}
+.status-emproducao{background:#e3edff;color:#1f4fa0;border-color:#bcd3f5;}
+.status-enviado{background:#e7f7ec;color:#1f7a3d;border-color:#b7e3c5;}
+.status-concluido{background:#f1e7d3;color:#5a4732;border-color:#dccaa6;}
+.status-cancelado{background:#f3e0e0;color:#a23c3c;border-color:#e0b4b4;}
+.avaliacao-nome{font-weight:800;color:var(--marrom-escuro);font-size:1rem;}
+.estrelas{color:var(--dourado);letter-spacing:2px;font-size:.95rem;}
+.empty{text-align:center;color:#8d7a5e;padding:36px 20px;font-weight:700;background:var(--branco);border-radius:var(--raio);border:1px dashed #dbc9a4;}
+/* FORMULÁRIOS */
+.form-produto,.form-config{display:flex;flex-direction:column;gap:14px;margin-bottom:28px;}
+.mini-linha{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.mini-linha input[type="file"]{flex:1;min-width:200px;}
+.galeria-admin{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;}
+.foto-admin{position:relative;width:92px;height:92px;border-radius:12px;overflow:hidden;border:2px solid #e2d5b8;background:#fdfaf3;transition:transform .2s;}
+.foto-admin:hover{transform:scale(1.04);}
+.foto-admin img{width:100%;height:100%;object-fit:cover;}
+.foto-admin .btn{position:absolute;top:4px;right:4px;padding:3px 9px;font-size:.68rem;border-radius:8px;min-width:auto;line-height:1.2;}
+.galeria-produto{background:#fdfaf3;border:1px dashed #cca43a;border-radius:12px;padding:14px;margin-top:12px;}
+/* STATUS DA INTEGRAÇÃO GOOGLE */
+.caixa-status-google{background:var(--branco);border:1px solid #eadfc9;border-left:4px solid var(--dourado);border-radius:12px;padding:14px 16px;margin-bottom:20px;font-size:.9rem;color:var(--texto);}
+.caixa-status-google .icone{font-size:1.1rem;}
+.caixa-status-google.ok{border-left-color:var(--verde);}
+.caixa-status-google.erro{border-left-color:var(--vermelho);}
+/* RESPONSIVO */
+@media (max-width:1024px){
+  .sidebar{transform:translateX(-108%);}
+  .painel.sidebar-aberta .sidebar{transform:none;}
+  .conteudo{margin-left:0;}
+  .hamburger{display:inline-flex;}
+  .conteudo-inner{padding:22px 18px 50px;}
+  .topbar{padding:12px 18px;}
+}
+@media (max-width:768px){
+  .grade2{grid-template-columns:1fr;}
+  .btn{padding:12px 16px;font-size:.9rem;}
+  .card{padding:16px 18px;}
+  .card .acoes{display:grid;grid-template-columns:1fr 1fr;}
+  .card .acoes .btn{width:100%;}
+  .topbar-titulo{font-size:1.08rem;}
+}
+@media (max-width:480px){
+  .card .acoes{grid-template-columns:1fr;}
+  .galeria-admin{gap:8px;}
+  .foto-admin{width:78px;height:78px;}
+  .card-login{padding:30px 22px;}
+  .mini-linha{flex-direction:column;align-items:stretch;}
+  .mini-linha .btn{width:100%;}
+  .conteudo-aba h2{font-size:1.4rem;}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;}
+}
 </style>
 </head>
 <body>
-
+<!-- ==================== TELA DE LOGIN ==================== -->
 <div id="telaLogin" class="tela-login">
-  <form id="formLogin" class="card-login">
-    <h1>@CASAL.PERSONALIZADOS</h1>
-    <p>Área administrativa</p>
-    <div class="campo">
-      <label>Usuário</label>
-      <input type="text" id="loginUsuario" autocomplete="username" required>
+  <form id="formLogin" class="card-login" autocomplete="off">
+    <div class="login-marca">
+      <div class="marca-nome">@CASAL.PERSONALIZADOS</div>
+      <div class="marca-sub">Painel administrativo</div>
     </div>
     <div class="campo">
-      <label>Senha</label>
-      <input type="password" id="loginSenha" autocomplete="current-password" required>
+      <label for="loginUsuario">Usuário</label>
+      <input type="text" id="loginUsuario" autocomplete="username" placeholder="Digite seu usuário" required>
+    </div>
+    <div class="campo">
+      <label for="loginSenha">Senha</label>
+      <input type="password" id="loginSenha" autocomplete="current-password" placeholder="Digite sua senha" required>
     </div>
     <button type="submit" class="btn btn-dourado">Entrar</button>
     <div class="erro" id="erroLogin"></div>
   </form>
 </div>
-
+<!-- ==================== PAINEL ADMIN ==================== -->
 <div id="painel" class="painel" style="display:none;">
-  <header class="painel-topo">
-    <div class="container">
-      <h1>Painel Admin</h1>
-      <div class="topo-acoes">
-        <a href="/" target="_blank" class="btn btn-contorno">Ver loja →</a>
-        <button type="button" class="btn btn-outline" id="btnSair">Sair</button>
-      </div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-marca">
+      <span class="marca-nome">CASAL</span>
+      <span class="marca-sub">Painel Admin</span>
     </div>
-  </header>
-
-  <nav class="abas">
-    <div class="container">
+    <nav class="sidebar-nav" id="sidebarNav">
       <button type="button" data-aba="pedidos" class="aba ativa">📦 Pedidos <span id="badgePedidos" class="badge"></span></button>
       <button type="button" data-aba="produtos" class="aba">🛍️ Produtos</button>
       <button type="button" data-aba="avaliacoes" class="aba">⭐ Avaliações <span id="badgeAvaliacoes" class="badge"></span></button>
+      <button type="button" data-aba="google" class="aba">🤖 Google</button>
       <button type="button" data-aba="config" class="aba">⚙️ Configurações</button>
       <button type="button" data-aba="senha" class="aba">🔑 Senha</button>
+    </nav>
+    <div class="sidebar-rodape">
+      <a href="/" target="_blank" class="btn btn-contorno">Ver loja →</a>
+      <button type="button" class="btn btn-outline" id="btnSair">Sair</button>
     </div>
-  </nav>
-
-  <main class="container">
-    <section id="aba-pedidos" class="conteudo-aba ativa">
-      <h2>Pedidos recebidos</h2>
-      <p class="dica">Quando um cliente envia pedido pelo site, ele aparece aqui e também na sua mensagem do WhatsApp.</p>
-      <div id="listaPedidos" class="lista-cards"></div>
-    </section>
-
-    <section id="aba-produtos" class="conteudo-aba">
-      <h2>Produtos</h2>
-      <p class="dica">Edite preços, adicione, remova ou troque a ordem dos produtos. Tudo reflete na loja na hora.</p>
-      <form id="formProduto" class="card form-produto">
-        <h3 id="tituloFormProduto">➕ Novo produto</h3>
-        <input type="hidden" id="produtoId">
-        <div class="grade2">
-          <div class="campo"><label>Categoria</label><select id="pCategoria">
-            <option>Camisetas</option><option>Canecas</option><option>Moletons</option><option>Quadros</option><option>Outros</option>
-          </select></div>
-          <div class="campo"><label>Nome do produto</label><input type="text" id="pNome" required></div>
+  </aside>
+  <!-- OVERLAY (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <!-- CONTEÚDO -->
+  <main class="conteudo">
+    <header class="topbar">
+      <button type="button" class="hamburger" id="btnMenuLateral" aria-label="Abrir menu">☰</button>
+      <h1 class="topbar-titulo" id="topbarTitulo">📦 Pedidos</h1>
+      <div class="topbar-acoes">
+        <a href="https://api.whatsapp.com/send/?phone=555194222647&text=Ol%C3%A1%21%20Vim%20pelo%20painel%20da%20CASAL%20PERSONALIZADOS.%20Preciso%20de%20ajuda." target="_blank" rel="noopener" class="btn btn-whats btn-pequeno">💬 Atendimento WhatsApp</a>
+      </div>
+    </header>
+    <div class="conteudo-inner">
+      <!-- ABA: PEDIDOS -->
+      <section id="aba-pedidos" class="conteudo-aba ativa">
+        <h2>Pedidos recebidos</h2>
+        <p class="dica">Quando um cliente envia pedido pelo site, ele aparece aqui. Use a busca, filtre por status e envie para o Google (Planilha + Agenda + E-mail) quando quiser.</p>
+        <div class="pedidos-ferramentas">
+          <div class="busca-pedidos">
+            <input type="text" id="buscaPedidos" placeholder="🔍 Buscar por nome, produto ou nº do pedido...">
+          </div>
+          <select class="filtro-status" id="filtroStatus">
+            <option value="">Todos os status</option>
+            <option value="novo">🆕 Novo</option>
+            <option value="em producao">🔧 Em produção</option>
+            <option value="enviado">📬 Enviado</option>
+            <option value="concluido">✅ Concluído</option>
+            <option value="cancelado">❌ Cancelado</option>
+          </select>
+          <span class="pedidos-contador" id="pedidosContador">0 pedidos</span>
         </div>
-        <div class="campo"><label>Preço (ex: R$ 45 | 12+ un: R$ 40 cada)</label><input type="text" id="pPreco" required></div>
-        <div class="campo"><label>Detalhes / patamares de desconto</label><input type="text" id="pDetalhes" placeholder="3+ un: R$ 100 cada | 10+ un: R$ 80 cada"></div>
-        <div class="campo"><label>Brinde</label><input type="text" id="pBrinde" placeholder="🎁 Brinde 10+: 2 quadros pequenos de azulejo"></div>
-        <div class="campo">
-          <label>Enviar foto do produto (opcional)</label>
-          <input type="file" id="pArquivoFoto" accept="image/*">
-          <img id="pPreviewFoto" alt="Prévia da foto" style="display:none;max-height:120px;border-radius:10px;margin-top:8px;">
-          <button type="button" class="btn btn-outline" id="btnRemoverPreviewFoto" style="display:none;margin-top:8px;">Remover foto</button>
-          <small style="color:#8d7a5e;">JPG, PNG, WEBP ou GIF — até 5MB</small>
+        <div id="listaPedidos" class="lista-cards"></div>
+      </section>
+      <!-- ABA: PRODUTOS -->
+      <section id="aba-produtos" class="conteudo-aba">
+        <h2>Produtos</h2>
+        <p class="dica">Edite preços, adicione, remova ou troque a ordem dos produtos. O botão 📷 Fotos de cada card abre a galeria do carrossel daquele produto.</p>
+        <form id="formProduto" class="card form-produto">
+          <h3 id="tituloFormProduto">➕ Novo produto</h3>
+          <input type="hidden" id="produtoId">
+          <div class="grade2">
+            <div class="campo">
+              <label for="pCategoria">Categoria</label>
+              <select id="pCategoria"><option>Camisetas</option><option>Canecas</option><option>Moletons</option><option>Quadros</option><option>Outros</option></select>
+            </div>
+            <div class="campo">
+              <label for="pNome">Nome do produto</label>
+              <input type="text" id="pNome" placeholder="Ex: Caneca Branca" required>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="pPreco">Preço <span class="opcional">(ex: R$ 45 | 12+ un: R$ 40 cada)</span></label>
+            <input type="text" id="pPreco" placeholder="R$ 45" required>
+          </div>
+          <div class="campo">
+            <label for="pDetalhes">Detalhes / patamares de desconto</label>
+            <input type="text" id="pDetalhes" placeholder="3+ un: R$ 100 cada (economize R$ 20) | 10+ un: R$ 80 cada (economize R$ 40)">
+          </div>
+          <div class="campo">
+            <label for="pBrinde">Brinde</label>
+            <input type="text" id="pBrinde" placeholder="🎁 Brinde 10+: 2 quadros pequenos de azulejo">
+          </div>
+          <div class="campo">
+            <label for="pArquivoFoto">Enviar foto do produto <span class="opcional">(opcional)</span></label>
+            <input type="file" id="pArquivoFoto" accept="image/*">
+            <img id="pPreviewFoto" alt="Prévia da foto" style="display:none;max-height:130px;border-radius:10px;margin-top:8px;">
+            <button type="button" class="btn btn-outline btn-pequeno" id="btnRemoverPreviewFoto" style="display:none;margin-top:8px;">🗑 Remover foto</button>
+            <small>JPG, PNG, WEBP ou GIF — até 5MB. Para várias fotos por produto (carrossel), use o botão 📷 Fotos do card.</small>
+          </div>
+          <div class="campo">
+            <label for="pFoto">URL da foto <span class="opcional">(opcional — preenchida automaticamente ao enviar)</span></label>
+            <input type="text" id="pFoto" placeholder="/uploads/arquivo.png">
+          </div>
+          <div class="acoes-form">
+            <button type="submit" class="btn btn-dourado" id="btnSalvarProduto">Salvar produto</button>
+            <button type="button" class="btn btn-outline" id="btnCancelarProduto" style="display:none;">Cancelar edição</button>
+          </div>
+        </form>
+        <div id="listaProdutos" class="lista-cards"></div>
+      </section>
+      <!-- ABA: AVALIAÇÕES -->
+      <section id="aba-avaliacoes" class="conteudo-aba">
+        <h2>Avaliações dos clientes</h2>
+        <p class="dica">Aprove as avaliações para elas aparecerem na loja. Remova as que não quiser.</p>
+        <div id="listaAvaliacoesAdmin" class="lista-cards"></div>
+      </section>
+      <!-- ABA: GOOGLE (INTEGRAÇÃO E AUTOMAÇÃO) -->
+      <section id="aba-google" class="conteudo-aba">
+        <h2>🤖 Integração Google</h2>
+        <p class="dica">Ligue a loja ao Google: todo pedido pode ser gravado automaticamente na <strong>Planilha</strong>, entrar como evento na <strong>Agenda</strong> e disparar um <strong>e-mail</strong>. Sua URL já está preenchida abaixo — é só testar a conexão.</p>
+        <div class="caixa-status-google" id="caixaStatusGoogle">
+          <span class="icone">⏳</span> <strong>Status:</strong> aguardando teste de conexão.
         </div>
-        <div class="campo"><label>URL da foto (opcional — preenchida automaticamente ao enviar)</label><input type="text" id="pFoto" placeholder="/uploads/arquivo.png"></div>
-        <div class="acoes-form">
-          <button type="submit" class="btn btn-dourado" id="btnSalvarProduto">Salvar produto</button>
-          <button type="button" class="btn btn-outline" id="btnCancelarProduto" style="display:none;">Cancelar edição</button>
-        </div>
-      </form>
-      <div id="listaProdutos" class="lista-cards"></div>
-    </section>
-
-    <section id="aba-avaliacoes" class="conteudo-aba">
-      <h2>Avaliações dos clientes</h2>
-      <p class="dica">Aprove as avaliações para elas aparecerem na loja. Remova as que não quiser.</p>
-      <div id="listaAvaliacoesAdmin" class="lista-cards"></div>
-    </section>
-
-    <section id="aba-config" class="conteudo-aba">
-      <h2>Configurações da loja</h2>
-      <p class="dica">Altere textos do site, seu WhatsApp, horários e a foto de destaque. Salve e veja na loja.</p>
-      <form id="formConfig" class="card form-config">
-        <div class="campo"><label>Nome do site</label><input type="text" id="sNome"></div>
-        <div class="campo"><label>Slogan / logo textual</label><input type="text" id="sSlogan"></div>
-        <div class="campo"><label>WhatsApp (somente números, ex: 5511999999999)</label><input type="text" id="sWhatsapp"></div>
-        <div class="campo"><label>Frase do topo (hero)</label><input type="text" id="sHeroTag"></div>
-        <div class="campo"><label>Título principal</label><input type="text" id="sHeroTitulo"></div>
-        <div class="campo"><label>Subtítulo</label><input type="text" id="sHeroSubtitulo"></div>
-        <div class="campo"><label>Destaque do brinde</label><input type="text" id="sBrinde"></div>
-        <div class="campo"><label>Horário de atendimento</label><input type="text" id="sAtendimento"></div>
-        <div class="campo">
-          <label>Foto de destaque (topo do site)</label>
-          <input type="file" id="sArquivoHero" accept="image/*">
-          <button type="button" class="btn btn-outline" id="btnEnviarHero">Enviar foto de destaque</button>
-          <img id="sPreviewHero" alt="Prévia da foto de destaque" style="display:none;max-height:120px;border-radius:10px;margin-top:8px;">
-        </div>
-        <button type="submit" class="btn btn-dourado">Salvar configurações</button>
-        <div class="msg" id="msgConfig"></div>
-      </form>
-    </section>
-
-    <section id="aba-senha" class="conteudo-aba">
-      <h2>Trocar senha</h2>
-      <form id="formSenha" class="card form-config">
-        <div class="campo"><label>Senha atual</label><input type="password" id="senhaAtual" autocomplete="current-password" required></div>
-        <div class="campo"><label>Nova senha (mínimo 8 caracteres)</label><input type="password" id="senhaNova" autocomplete="new-password" required></div>
-        <button type="submit" class="btn btn-dourado">Trocar senha</button>
-        <div class="msg" id="msgSenha"></div>
-      </form>
-    </section>
+        <form id="formGoogleConfig" class="card form-config">
+          <div class="campo">
+            <label for="gWebhookUrl">URL do Web App (Apps Script)</label>
+            <input type="url" id="gWebhookUrl" value="https://script.google.com/macros/s/AKfycbz10W-jc5b0SBQE0Ox24ichKh12Sr5WuZfbIyUdYJaOSjJrbxZJ2fOwYEs0fGJ6fgVqaw/exec" required>
+            <small>Esta é a URL da sua implantação do Apps Script (já configurada).</small>
+          </div>
+          <div class="campo">
+            <label for="gEmailNotif">E-mail para notificações <span class="opcional">(opcional — padrão: casalpersonalizado01@gmail.com)</span></label>
+            <input type="email" id="gEmailNotif" value="casalpersonalizado01@gmail.com" placeholder="casalpersonalizado01@gmail.com">
+            <small>O aviso de pedido chega neste e-mail, além do definido no Apps Script (jonatasm.f48@gmail.com).</small>
+          </div>
+          <div class="campo">
+            <label style="flex-direction:row;align-items:center;gap:8px;cursor:pointer;">
+              <input type="checkbox" id="gAutoEnviar" style="width:auto;height:18px;width:18px;" checked>
+              Enviar automaticamente novos pedidos ao Google assim que chegarem
+            </label>
+          </div>
+          <div class="acoes-form">
+            <button type="submit" class="btn btn-dourado">Salvar configuração</button>
+            <button type="button" class="btn btn-outline" id="btnTestarGoogle">🔌 Testar conexão</button>
+          </div>
+          <div class="msg" id="msgGoogleConfig"></div>
+        </form>
+      </section>
+      <!-- ABA: CONFIGURAÇÕES -->
+      <section id="aba-config" class="conteudo-aba">
+        <h2>Configurações da loja</h2>
+        <p class="dica">Altere textos do site, seu WhatsApp, horários e as fotos do carrossel do topo. Salve e veja na loja.</p>
+        <form id="formConfig" class="card form-config">
+          <div class="campo">
+            <label for="sNome">Nome do site</label>
+            <input type="text" id="sNome" placeholder="Casal Personalizados">
+          </div>
+          <div class="campo">
+            <label for="sSlogan">Slogan / logo textual</label>
+            <input type="text" id="sSlogan" placeholder="@CASAL.PERSONALIZADOS">
+          </div>
+          <div class="campo">
+            <label for="sWhatsapp">WhatsApp <span class="opcional">(somente números, ex: 555194222647)</span></label>
+            <input type="text" id="sWhatsapp" placeholder="555194222647">
+          </div>
+          <div class="campo">
+            <label for="sHeroTag">Frase do topo (hero)</label>
+            <input type="text" id="sHeroTag" placeholder="✨ Cuidado artesanal em cada detalhe">
+          </div>
+          <div class="campo">
+            <label for="sHeroTitulo">Título principal</label>
+            <input type="text" id="sHeroTitulo" placeholder="Eternize seus momentos...">
+          </div>
+          <div class="campo">
+            <label for="sHeroSubtitulo">Subtítulo</label>
+            <input type="text" id="sHeroSubtitulo" placeholder="Canecas, camisetas, moletons...">
+          </div>
+          <div class="campo">
+            <label for="sBrinde">Destaque do brinde</label>
+            <input type="text" id="sBrinde" placeholder="🎁 Brinde em compras por quantidade...">
+          </div>
+          <div class="campo">
+            <label for="sAtendimento">Horário de atendimento</label>
+            <input type="text" id="sAtendimento" placeholder="Segunda a Sexta: 08:30 às 18:30 | Sábados: 09:00 às 14:00">
+          </div>
+          <div class="campo">
+            <label for="sArquivoHero">Foto de destaque <span class="opcional">(topo do site — 1ª foto da moldura)</span></label>
+            <input type="file" id="sArquivoHero" accept="image/*">
+            <button type="button" class="btn btn-outline btn-pequeno" id="btnEnviarHero">⬆️ Enviar foto de destaque</button>
+            <img id="sPreviewHero" alt="Prévia da foto de destaque" style="display:none;max-height:130px;border-radius:10px;margin-top:8px;">
+          </div>
+          <div class="campo">
+            <label for="heroArquivoFotos">🎠 Fotos do carrossel do topo <span class="opcional">(quantas quiser — passam dentro da moldura)</span></label>
+            <div class="mini-linha">
+              <input type="file" id="heroArquivoFotos" accept="image/*" multiple>
+              <button type="button" class="btn btn-verde btn-pequeno" id="btnEnviarFotosHero">➕ Adicionar fotos</button>
+            </div>
+            <small>Envie várias de uma vez. A moldura do topo se ajusta à proporção da primeira foto.</small>
+            <div id="listaFotosHero" class="galeria-admin"></div>
+          </div>
+          <button type="submit" class="btn btn-dourado">Salvar configurações</button>
+          <div class="msg" id="msgConfig"></div>
+        </form>
+      </section>
+      <!-- ABA: SENHA -->
+      <section id="aba-senha" class="conteudo-aba">
+        <h2>Trocar senha</h2>
+        <form id="formSenha" class="card form-config">
+          <div class="campo">
+            <label for="senhaAtual">Senha atual</label>
+            <input type="password" id="senhaAtual" autocomplete="current-password" required>
+          </div>
+          <div class="campo">
+            <label for="senhaNova">Nova senha <span class="opcional">(mínimo 8 caracteres)</span></label>
+            <input type="password" id="senhaNova" autocomplete="new-password" required>
+          </div>
+          <button type="submit" class="btn btn-dourado">Trocar senha</button>
+          <div class="msg" id="msgSenha"></div>
+        </form>
+      </section>
+    </div>
   </main>
 </div>
-
 <script>
 /* =========================================================
-   CASAL PERSONALIZADOS — Painel Admin autossuficiente
-   (CSS + JS no mesmo arquivo, delegação de eventos)
+   CASAL PERSONALIZADOS — Painel Admin
+   JS central (lógica + integração Google + automação)
+   Dados já atualizados: WhatsApp 555194222647 · Web App Google · E-mails
    ========================================================= */
-function $(id) { return document.getElementById(id); }
-
+function $(id){return document.getElementById(id);}
+function esc(str){return String(str==null?'':str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+/* ---------- WHATSAPP FIXO ---------- */
+var WHATSAPP_LOJA = '555194222647'; // +55 51 9422-2647
+function linkWhats(mensagem, numero){
+  var n = String(numero || WHATSAPP_LOJA).replace(/\D/g,'');
+  var t = encodeURIComponent(String(mensagem||'').replace(/[\uD800-\uDFFF]/g,'').replace(/[\uFFFD]/g,'').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').trim());
+  return 'https://api.whatsapp.com/send/?phone=' + n + '&text=' + t;
+}
+/* ---------- CLIENTE DE API ---------- */
 const api = {
-  async req(url, metodo, corpo) {
-    const opcoes = { method: metodo, headers: { 'Content-Type': 'application/json' } };
+  async req(url, metodo, corpo){
+    const opcoes = { method: metodo, headers: {'Content-Type':'application/json'} };
     if (corpo) opcoes.body = JSON.stringify(corpo);
     let resp;
-    try {
-      resp = await fetch(url, opcoes);
-    } catch (err) {
-      alert('Falha de conexão com o servidor. Confira se o npm start está rodando.');
-      throw err;
-    }
-    if (resp.status === 401) {
-      alert('Sessão expirada. Faça login novamente.');
-      mostrarLogin();
-      throw new Error('Sessão expirada');
-    }
+    try { resp = await fetch(url, opcoes); }
+    catch(err){ alert('Falha de conexão com o servidor. Confira se o npm start está rodando.'); throw err; }
+    if (resp.status === 401){ alert('Sessão expirada. Faça login novamente.'); mostrarLogin(); throw new Error('Sessão expirada'); }
     let dados;
-    try {
-      dados = await resp.json();
-    } catch (err) {
-      alert('Resposta inválida do servidor (status ' + resp.status + '). Reinicie o servidor.');
-      throw err;
-    }
+    try { dados = await resp.json(); }
+    catch(err){ alert('Resposta inválida do servidor (status '+resp.status+'). Reinicie o servidor.'); throw err; }
     return dados;
   }
 };
-
 /* ---------- LOGIN / SESSÃO ---------- */
-function mostrarLogin() {
-  $('telaLogin').style.display = 'flex';
-  $('painel').style.display = 'none';
-}
-function mostrarPainel() {
-  $('telaLogin').style.display = 'none';
-  $('painel').style.display = 'block';
-  carregarTudo();
-}
-$('formLogin').addEventListener('submit', async function (e) {
+function mostrarLogin(){ $('telaLogin').style.display='flex'; $('painel').style.display='none'; }
+function mostrarPainel(){ $('telaLogin').style.display='none'; $('painel').style.display='block'; carregarTudo(); }
+$('formLogin').addEventListener('submit', async function(e){
   e.preventDefault();
   const usuario = $('loginUsuario').value.trim();
   const senha = $('loginSenha').value;
   try {
-    const r = await api.req('/api/admin/login', 'POST', { usuario, senha });
+    const r = await api.req('/api/admin/login','POST',{usuario,senha});
     if (r.ok) mostrarPainel();
     else $('erroLogin').textContent = r.erro || 'Falha no login.';
-  } catch (err) {
-    $('erroLogin').textContent = 'Erro de conexão. Tente novamente.';
-  }
+  } catch(err){ $('erroLogin').textContent = 'Erro de conexão. Tente novamente.'; }
 });
-$('btnSair').addEventListener('click', async function () {
-  await api.req('/api/admin/logout', 'POST');
-  mostrarLogin();
-});
-
-(async function checarSessao() {
-  try {
-    const r = await api.req('/api/admin/me', 'GET');
-    if (r.usuario) mostrarPainel(); else mostrarLogin();
-  } catch (e) { mostrarLogin(); }
+$('btnSair').addEventListener('click', async function(){ await api.req('/api/admin/logout','POST'); mostrarLogin(); });
+(async function checarSessao(){
+  try { const r = await api.req('/api/admin/me','GET'); if (r.usuario) mostrarPainel(); else mostrarLogin(); }
+  catch(e){ mostrarLogin(); }
 })();
-
 /* ---------- ABAS ---------- */
-document.querySelectorAll('.aba').forEach(function (aba) {
-  aba.addEventListener('click', function () {
-    document.querySelectorAll('.aba').forEach(function (a) { a.classList.remove('ativa'); });
+document.querySelectorAll('.aba').forEach(function(aba){
+  aba.addEventListener('click', function(){
+    document.querySelectorAll('.aba').forEach(function(a){ a.classList.remove('ativa'); });
     this.classList.add('ativa');
-    document.querySelectorAll('.conteudo-aba').forEach(function (s) { s.classList.remove('ativa'); });
+    document.querySelectorAll('.conteudo-aba').forEach(function(s){ s.classList.remove('ativa'); });
     $('aba-' + this.dataset.aba).classList.add('ativa');
+    var titulo = $('topbarTitulo');
+    if (titulo && this.firstChild){ var txt = (this.firstChild.nodeValue||'').trim(); if (txt) titulo.textContent = txt; }
   });
 });
-
 /* ---------- CARREGAR TUDO ---------- */
-function carregarTudo() {
+function carregarTudo(){
   carregarPedidos();
   carregarProdutosAdmin();
   carregarAvaliacoesAdmin();
   carregarConfig();
+  carregarGaleria('hero',0,'listaFotosHero');
+  carregarConfigGoogle();
 }
-
 /* =========================================================
-   DELEGAÇÃO DE EVENTOS — resolve os botões Editar/Excluir
-   Funciona com botões criados dinamicamente, sem onclick
+   INTEGRAÇÃO GOOGLE (config + envio + automação)
    ========================================================= */
-document.addEventListener('click', function (e) {
-  const btn = e.target.closest('[data-acao]');
+var GCONFIG_KEY = 'casal_admin_gconfig';
+var GOOGLE_ENVIADOS_KEY = 'casal_admin_google_enviados';
+var pedidosCache = [];
+var configGoogle = {
+  webhookUrl: 'https://script.google.com/macros/s/AKfycbz10W-jc5b0SBQE0Ox24ichKh12Sr5WuZfbIyUdYJaOSjJrbxZJ2fOwYEs0fGJ6fgVqaw/exec',
+  emailNotif: 'casalpersonalizado01@gmail.com',
+  autoEnviar: true
+};
+function lerObj(chave, padrao){
+  try { var v = JSON.parse(localStorage.getItem(chave)); return v==null?padrao:v; } catch(e){ return padrao; }
+}
+function salvarObj(chave, valor){
+  try { localStorage.setItem(chave, JSON.stringify(valor)); } catch(e){}
+}
+function idsGoogleEnviados(){
+  var v = lerObj(GOOGLE_ENVIADOS_KEY, []);
+  return Array.isArray(v) ? v : [];
+}
+function marcarGoogleEnviado(id){
+  var v = idsGoogleEnviados();
+  if (v.indexOf(String(id)) === -1) v.push(String(id));
+  salvarObj(GOOGLE_ENVIADOS_KEY, v);
+}
+function foiEnviadoGoogle(id){
+  return idsGoogleEnviados().indexOf(String(id)) !== -1;
+}
+function carregarConfigGoogle(){
+  /* Se já houver configuração salva no navegador, usa ela; senão usa os padrões já preenchidos */
+  var salvo = lerObj(GCONFIG_KEY, null);
+  configGoogle = salvo || { webhookUrl: 'https://script.google.com/macros/s/AKfycbz10W-jc5b0SBQE0Ox24ichKh12Sr5WuZfbIyUdYJaOSjJrbxZJ2fOwYEs0fGJ6fgVqaw/exec', emailNotif: 'casalpersonalizado01@gmail.com', autoEnviar: true };
+  $('gWebhookUrl').value = configGoogle.webhookUrl || '';
+  $('gEmailNotif').value = configGoogle.emailNotif || '';
+  $('gAutoEnviar').checked = configGoogle.autoEnviar !== false;
+  atualizarStatusGoogle();
+}
+function atualizarStatusGoogle(){
+  var caixa = $('caixaStatusGoogle');
+  if (!caixa) return;
+  if (configGoogle.webhookUrl){
+    caixa.className = 'caixa-status-google ok';
+    caixa.innerHTML = '<span class="icone">✅</span> <strong>Configurado.</strong> Os pedidos serão enviados para a sua Planilha + Agenda + E-mail' + (configGoogle.autoEnviar ? ' <strong>automaticamente</strong>.' : '.');
+  } else {
+    caixa.className = 'caixa-status-google';
+    caixa.innerHTML = '<span class="icone">⏳</span> <strong>Não configurado.</strong> Cole a URL do Web App (Apps Script) para ativar a integração.';
+  }
+}
+$('formGoogleConfig').addEventListener('submit', function(e){
+  e.preventDefault();
+  configGoogle = {
+    webhookUrl: $('gWebhookUrl').value.trim(),
+    emailNotif: $('gEmailNotif').value.trim(),
+    autoEnviar: $('gAutoEnviar').checked
+  };
+  if (configGoogle.webhookUrl && !/^https:\/\//.test(configGoogle.webhookUrl)){
+    $('msgGoogleConfig').style.color = '#b03333';
+    $('msgGoogleConfig').textContent = '⚠️ A URL precisa começar com https:// (use a URL da implantação do Apps Script).';
+    return;
+  }
+  salvarObj(GCONFIG_KEY, configGoogle);
+  atualizarStatusGoogle();
+  $('msgGoogleConfig').style.color = '#2e7d32';
+  $('msgGoogleConfig').textContent = '✅ Configuração salva!';
+  setTimeout(function(){ $('msgGoogleConfig').textContent=''; }, 3500);
+});
+$('btnTestarGoogle').addEventListener('click', async function(){
+  var url = $('gWebhookUrl').value.trim();
+  if (!url){ alert('Cole primeiro a URL do Web App.'); return; }
+  var btn = this;
+  btn.disabled = true;
+  btn.textContent = 'Testando...';
+  var caixa = $('caixaStatusGoogle');
+  try {
+    var resp = await fetch(url, { method:'GET' });
+    var dados = await resp.json().catch(function(){ return {}; });
+    caixa.className = 'caixa-status-google ok';
+    caixa.innerHTML = '<span class="icone">✅</span> <strong>Conexão OK!</strong> ' + esc(dados.mensagem || 'O Google respondeu com sucesso.');
+  } catch(err){
+    caixa.className = 'caixa-status-google erro';
+    caixa.innerHTML = '<span class="icone">⚠️</span> <strong>Não foi possível conectar.</strong> Confira se a URL foi implantada com acesso \'Qualquer pessoa\' e se você está conectado à internet.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔌 Testar conexão';
+  }
+});
+/* ENVIO DE UM PEDIDO PARA O GOOGLE */
+async function enviarPedidoParaGoogle(pedido){
+  if (!configGoogle.webhookUrl) return false;
+  var payload = {
+    numero: pedido.id,
+    nome: pedido.nome || '',
+    whatsapp: pedido.whatsapp || '',
+    produto: pedido.produto || '',
+    quantidade: pedido.quantidade || 1,
+    tamanho: pedido.tamanho || '',
+    cor: pedido.cor || '',
+    texto: pedido.texto || '',
+    status: pedido.status || 'novo',
+    emailNotif: configGoogle.emailNotif || ''
+  };
+  try {
+    var resp = await fetch(configGoogle.webhookUrl, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    });
+    var dados = await resp.json().catch(function(){ return {}; });
+    if (dados.ok === false) return false;
+    marcarGoogleEnviado(pedido.id);
+    return true;
+  } catch(err){
+    return false;
+  }
+}
+/* ENVIO AUTOMÁTICO DE PEDIDOS NOVOS (quando a opção está ativa) */
+async function enviarNovosAutomaticamente(){
+  if (!configGoogle.webhookUrl || !configGoogle.autoEnviar) return;
+  for (var i = 0; i < pedidosCache.length; i++){
+    var p = pedidosCache[i];
+    if ((p.status === 'novo' || p.status === 'em producao') && !foiEnviadoGoogle(p.id)){
+      await enviarPedidoParaGoogle(p);
+    }
+  }
+  renderizarPedidos(carregarPedidosCache(), false);
+}
+/* =========================================================
+   DELEGAÇÃO DE EVENTOS (botões dinâmicos)
+   ========================================================= */
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('[data-acao]');
   if (!btn) return;
-  const acao = btn.getAttribute('data-acao');
-  const id = btn.getAttribute('data-id');
+  var acao = btn.getAttribute('data-acao');
+  var id = btn.getAttribute('data-id');
   if (acao === 'editar') editarProduto(id);
   else if (acao === 'excluir') excluirProduto(id);
   else if (acao === 'status') mudarStatus(id, btn.getAttribute('data-status'));
   else if (acao === 'excluir-pedido') excluirPedido(id);
   else if (acao === 'avaliacao') mudarAvaliacao(id, btn.getAttribute('data-aprovado'));
   else if (acao === 'excluir-avaliacao') excluirAvaliacao(id);
+  else if (acao === 'fotos') toggleGaleriaProduto(id);
+  else if (acao === 'enviar-fotos-produto'){
+    var inp = $('fotosArquivo'+id);
+    enviarFotosGaleria('produto', id, inp.files, 'listaFotosProduto'+id);
+    inp.value = '';
+  }
+  else if (acao === 'excluir-foto') excluirFoto(id, btn.getAttribute('data-tipo'), btn.getAttribute('data-ref'));
+  else if (acao === 'google-enviar') enviarPedidoGoogleClick(id);
+  else if (acao === 'whats-cliente') chamarWhatsCliente(id);
 });
-
-/* ---------- PEDIDOS ---------- */
-async function carregarPedidos() {
+/* ---------- AÇÕES NOVAS: GOOGLE + WHATSAPP ---------- */
+async function enviarPedidoGoogleClick(id){
+  var pedido = null;
+  for (var i=0;i<pedidosCache.length;i++){ if (String(pedidosCache[i].id) === String(id)){ pedido = pedidosCache[i]; break; } }
+  if (!pedido) return;
+  var resp = await enviarPedidoParaGoogle(pedido);
+  if (resp){
+    alert('✅ Pedido #' + id + ' enviado para o Google!');
+  } else {
+    alert('⚠️ Não foi possível enviar. Confira a URL do Web App na aba 🤖 Google.');
+  }
+  renderizarPedidos(carregarPedidosCache(), false);
+}
+function chamarWhatsCliente(id){
+  var pedido = null;
+  for (var i=0;i<pedidosCache.length;i++){ if (String(pedidosCache[i].id) === String(id)){ pedido = pedidosCache[i]; break; } }
+  if (!pedido) return;
+  var numero = String(pedido.whatsapp || '').replace(/\D/g,'');
+  var msg = 'Olá ' + (pedido.nome || '') + '! Aqui é da CASAL PERSONALIZADOS. Recebemos seu pedido #' + pedido.id + ' (' + pedido.produto + ') e estamos cuidando dele com muito carinho. 💛';
+  window.open(linkWhats(msg, numero.length >= 10 ? numero : WHATSAPP_LOJA), '_blank', 'noopener');
+}
+/* =========================================================
+   GALERIAS / CARROSSEL
+   ========================================================= */
+async function carregarGaleria(tipo, refId, listaId){
   try {
-    const pedidos = await api.req('/api/admin/orders', 'GET');
-    const lista = $('listaPedidos');
+    const fotos = await api.req('/api/admin/galeria/'+tipo+'/'+refId,'GET');
+    const lista = $(listaId);
+    if (!lista) return;
     lista.innerHTML = '';
-    if (!pedidos.length) {
-      lista.innerHTML = '<p class="empty">Nenhum pedido recebido ainda. Os pedidos do site aparecem aqui.</p>';
-      return;
+    if (!fotos.length){ lista.innerHTML = '<small style="color:#8d7a5e;">Nenhuma foto ainda. Envie acima 👆</small>'; return; }
+    fotos.forEach(function(f){
+      const item = document.createElement('div');
+      item.className = 'foto-admin';
+      item.innerHTML = '<img src="'+esc(f.url)+'" alt="Foto"><button type="button" class="btn btn-vermelho" data-acao="excluir-foto" data-id="'+esc(f.id)+'" data-tipo="'+esc(tipo)+'" data-ref="'+esc(refId)+'" title="Excluir foto">✕</button>';
+      lista.appendChild(item);
+    });
+  } catch(e){ console.error('Galeria:', e); }
+}
+async function enviarFotosGaleria(tipo, refId, arquivos, listaId){
+  if (!arquivos || !arquivos.length){ alert('Escolha uma ou mais imagens primeiro.'); return; }
+  const total = arquivos.length;
+  for (let i=0;i<total;i++){
+    const fd = new FormData();
+    fd.append('foto', arquivos[i]);
+    const r = await fetch('/api/admin/galeria/'+tipo+'/'+refId+'/fotos',{method:'POST',body:fd});
+    const j = await r.json();
+    if (!j.ok){ alert(j.erro || 'Falha no upload de uma imagem.'); return; }
+  }
+  alert('✅ '+total+' foto(s) adicionada(s) ao carrossel!');
+  carregarGaleria(tipo, refId, listaId);
+}
+function toggleGaleriaProduto(id){
+  const painel = $('galeriaProduto'+id);
+  if (!painel) return;
+  const aberto = painel.style.display === 'block';
+  painel.style.display = aberto ? 'none' : 'block';
+  if (!aberto) carregarGaleria('produto', id, 'listaFotosProduto'+id);
+}
+async function excluirFoto(id, tipo, ref){
+  if (!confirm('Excluir esta foto do carrossel?')) return;
+  try {
+    const r = await api.req('/api/admin/fotos/'+id,'DELETE');
+    if (r.ok){
+      if (tipo === 'hero') carregarGaleria('hero',0,'listaFotosHero');
+      else carregarGaleria('produto', ref, 'listaFotosProduto'+ref);
     }
-    const novos = pedidos.filter(function (p) { return p.status === 'novo'; }).length;
+  } catch(e){ console.error('Excluir foto:', e); }
+}
+/* =========================================================
+   PEDIDOS (com busca, filtro e numeração)
+   ========================================================= */
+function carregarPedidosCache(){
+  var termo = ($('buscaPedidos')||{}).value ? $('buscaPedidos').value.toLowerCase() : '';
+  var filtro = ($('filtroStatus')||{}).value ? $('filtroStatus').value : '';
+  var lista = pedidosCache.filter(function(p){
+    if (filtro && p.status !== filtro) return false;
+    if (termo){
+      var alvo = (String(p.id)+' '+String(p.nome)+' '+String(p.produto)).toLowerCase();
+      if (alvo.indexOf(termo) === -1) return false;
+    }
+    return true;
+  });
+  return lista;
+}
+function renderizarPedidos(pedidos, limparCaixa){
+  pedidos = pedidos || [];
+  const lista = $('listaPedidos');
+  lista.innerHTML = '';
+  var contador = $('pedidosContador');
+  if (contador) contador.textContent = pedidos.length + (pedidos.length === 1 ? ' pedido' : ' pedidos');
+  if (!pedidos.length){
+    lista.innerHTML = '<p class="empty">Nenhum pedido encontrado.</p>';
+    return;
+  }
+  const classes = { 'novo':'status-novo','em producao':'status-emproducao','enviado':'status-enviado','concluido':'status-concluido','cancelado':'status-cancelado' };
+  const rotulos = { 'novo':'🆕 Novo','em producao':'🔧 Em produção','enviado':'📬 Enviado','concluido':'✅ Concluído','cancelado':'❌ Cancelado' };
+  pedidos.forEach(function(p){
+    const card = document.createElement('div');
+    card.className = 'card';
+    var enviado = foiEnviadoGoogle(p.id);
+    var seloGoogle = enviado
+      ? '<span class="selo-google">☁️ Enviado ao Google</span>'
+      : '<span class="selo-google pendente">☁️ Não enviado</span>';
+    card.innerHTML =
+      '<span class="numero-pedido">Nº #' + esc(p.id) + '</span>' + seloGoogle +
+      '<h3>' + esc(p.nome) + '</h3>' +
+      '<p><strong>' + esc(p.produto) + '</strong> · Qtd: ' + esc(p.quantidade) +
+        (p.tamanho ? ' · Tam: ' + esc(p.tamanho) : '') +
+        (p.cor ? ' · Cor: ' + esc(p.cor) : '') + '</p>' +
+        (p.whatsapp ? '<p>📱 ' + esc(p.whatsapp) + '</p>' : '') +
+      (p.texto ? '<p>📝 ' + esc(p.texto) + '</p>' : '') +
+      '<div class="meta"><span>' + esc(p.criado_em) + '</span>' +
+        '<span class="pedido-status ' + (classes[p.status] || 'status-novo') + '">' + (rotulos[p.status] || esc(p.status)) + '</span></div>' +
+      '<div class="acoes">' +
+        '<button type="button" class="btn btn-outline" data-acao="status" data-id="' + esc(p.id) + '" data-status="em producao">Em produção</button>' +
+        '<button type="button" class="btn btn-outline" data-acao="status" data-id="' + esc(p.id) + '" data-status="enviado">Enviado</button>' +
+        '<button type="button" class="btn btn-verde" data-acao="status" data-id="' + esc(p.id) + '" data-status="concluido">Concluído</button>' +
+        '<button type="button" class="btn btn-outline" data-acao="google-enviar" data-id="' + esc(p.id) + '">☁️ Google</button>' +
+        '<button type="button" class="btn btn-whats" data-acao="whats-cliente" data-id="' + esc(p.id) + '">💬 WhatsApp</button>' +
+        '<button type="button" class="btn btn-vermelho" data-acao="status" data-id="' + esc(p.id) + '" data-status="cancelado">Cancelar</button>' +
+        '<button type="button" class="btn btn-vermelho" data-acao="excluir-pedido" data-id="' + esc(p.id) + '">Excluir</button>' +
+      '</div>';
+    lista.appendChild(card);
+  });
+}
+async function carregarPedidos(){
+  try {
+    const pedidos = await api.req('/api/admin/orders','GET');
+    pedidosCache = Array.isArray(pedidos) ? pedidos : [];
+    const novos = pedidosCache.filter(function(p){ return p.status === 'novo'; }).length;
     $('badgePedidos').style.display = novos ? 'inline' : 'none';
     $('badgePedidos').textContent = novos;
-    const classes = { 'novo':'status-novo', 'em producao':'status-emproducao', 'enviado':'status-enviado', 'concluido':'status-concluido', 'cancelado':'status-cancelado' };
-    const rotulos = { 'novo':'🆕 Novo', 'em producao':'🔧 Em produção', 'enviado':'📬 Enviado', 'concluido':'✅ Concluído', 'cancelado':'❌ Cancelado' };
-    pedidos.forEach(function (p) {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = '<h3>#' + p.id + ' — ' + p.nome + '</h3>' +
-        '<p><strong>' + p.produto + '</strong> · Qtd: ' + p.quantidade + (p.tamanho ? ' · Tam: ' + p.tamanho : '') + (p.cor ? ' · Cor: ' + p.cor : '') + '</p>' +
-        (p.texto ? '<p>📝 ' + p.texto + '</p>' : '') +
-        '<div class="meta"><span>' + p.criado_em + '</span><span class="pedido-status ' + (classes[p.status] || 'status-novo') + '">' + (rotulos[p.status] || p.status) + '</span></div>' +
-        '<div class="acoes">' +
-        '<button type="button" class="btn btn-outline" data-acao="status" data-id="' + p.id + '" data-status="em producao">Em produção</button>' +
-        '<button type="button" class="btn btn-outline" data-acao="status" data-id="' + p.id + '" data-status="enviado">Enviado</button>' +
-        '<button type="button" class="btn btn-verde" data-acao="status" data-id="' + p.id + '" data-status="concluido">Concluído</button>' +
-        '<button type="button" class="btn btn-vermelho" data-acao="status" data-id="' + p.id + '" data-status="cancelado">Cancelar</button>' +
-        '<button type="button" class="btn btn-vermelho" data-acao="excluir-pedido" data-id="' + p.id + '">Excluir</button></div>';
-      lista.appendChild(card);
-    });
-  } catch (e) { console.error('Pedidos:', e); }
+    renderizarPedidos(carregarPedidosCache(), false);
+    enviarNovosAutomaticamente();
+  } catch(e){ console.error('Pedidos:', e); }
 }
-async function mudarStatus(id, status) {
+async function mudarStatus(id, status){
   try {
-    await api.req('/api/admin/orders/' + id, 'PUT', { status: status });
+    await api.req('/api/admin/orders/'+id,'PUT',{status:status});
     alert('✅ Status atualizado.');
     carregarPedidos();
-  } catch (e) { console.error('Status:', e); }
+  } catch(e){ console.error('Status:', e); }
 }
-async function excluirPedido(id) {
+async function excluirPedido(id){
   if (!confirm('Excluir este pedido?')) return;
   try {
-    const r = await api.req('/api/admin/orders/' + id, 'DELETE');
-    if (r.ok) { alert('✅ Pedido excluído.'); carregarPedidos(); }
-  } catch (e) { console.error('Excluir pedido:', e); }
+    const r = await api.req('/api/admin/orders/'+id,'DELETE');
+    if (r.ok){ alert('✅ Pedido excluído.'); carregarPedidos(); }
+  } catch(e){ console.error('Excluir pedido:', e); }
 }
-
-/* ---------- PRODUTOS ---------- */
-async function carregarProdutosAdmin() {
+/* Busca e filtro com debounce simples */
+var timerBusca = null;
+$('buscaPedidos').addEventListener('input', function(){
+  clearTimeout(timerBusca);
+  timerBusca = setTimeout(function(){ renderizarPedidos(carregarPedidosCache(), false); }, 200);
+});
+$('filtroStatus').addEventListener('change', function(){
+  renderizarPedidos(carregarPedidosCache(), false);
+});
+/* =========================================================
+   PRODUTOS
+   ========================================================= */
+async function carregarProdutosAdmin(){
   try {
-    const produtos = await api.req('/api/admin/products', 'GET');
+    const produtos = await api.req('/api/admin/products','GET');
     const lista = $('listaProdutos');
     lista.innerHTML = '';
-    if (!produtos.length) {
-      lista.innerHTML = '<p class="empty">Nenhum produto. Adicione o primeiro acima.</p>';
-      return;
-    }
-    produtos.forEach(function (p) {
+    if (!produtos.length){ lista.innerHTML = '<p class="empty">Nenhum produto. Adicione o primeiro acima.</p>'; return; }
+    produtos.forEach(function(p){
       const card = document.createElement('div');
       card.className = 'card';
-      const fotoMini = p.foto
-        ? '<img src="' + p.foto + '" alt="' + p.nome + '" style="height:60px;width:60px;object-fit:cover;border-radius:8px;margin-bottom:6px;">'
-        : '';
-      card.innerHTML = fotoMini +
-        '<h3>' + p.nome + ' <small style="color:#8d7a5e;font-weight:600;">(' + p.categoria + ')</small></h3>' +
-        '<p><strong>' + p.preco + '</strong>' + (p.brinde ? ' · ' + p.brinde : '') + '</p>' +
+      const fotoMini = p.foto ? '<img src="'+esc(p.foto)+'" alt="'+esc(p.nome)+'" style="height:60px;width:60px;object-fit:cover;border-radius:8px;margin-bottom:8px;">' : '';
+      card.innerHTML =
+        fotoMini +
+        '<h3>'+esc(p.nome)+' <small style="color:#8d7a5e;font-weight:600;">('+esc(p.categoria)+')</small></h3>' +
+        '<p><strong>'+esc(p.preco)+'</strong>'+(p.brinde ? ' · '+esc(p.brinde) : '')+'</p>' +
         '<div class="acoes">' +
-        '<button type="button" class="btn btn-outline" data-acao="editar" data-id="' + p.id + '">Editar</button>' +
-        '<button type="button" class="btn btn-vermelho" data-acao="excluir" data-id="' + p.id + '">Excluir</button></div>';
+          '<button type="button" class="btn btn-outline" data-acao="editar" data-id="'+esc(p.id)+'">Editar</button>' +
+          '<button type="button" class="btn btn-outline" data-acao="fotos" data-id="'+esc(p.id)+'">📷 Fotos</button>' +
+          '<button type="button" class="btn btn-vermelho" data-acao="excluir" data-id="'+esc(p.id)+'">Excluir</button>' +
+        '</div>' +
+        '<div class="galeria-produto" id="galeriaProduto'+esc(p.id)+'" style="display:none;">' +
+          '<div class="mini-linha">' +
+            '<input type="file" id="fotosArquivo'+esc(p.id)+'" accept="image/*" multiple>' +
+            '<button type="button" class="btn btn-verde btn-pequeno" data-acao="enviar-fotos-produto" data-id="'+esc(p.id)+'">➕ Adicionar fotos</button>' +
+          '</div>' +
+          '<small style="color:#8d7a5e;">Fotos do carrossel deste produto (sem limite).</small>' +
+          '<div class="galeria-admin" id="listaFotosProduto'+esc(p.id)+'"></div>' +
+        '</div>';
       lista.appendChild(card);
     });
-  } catch (e) { console.error('Produtos:', e); }
+  } catch(e){ console.error('Produtos:', e); }
 }
-
-function editarProduto(id) {
-  api.req('/api/admin/products', 'GET').then(function (produtos) {
-    const p = produtos.find(function (x) { return Number(x.id) === Number(id); });
-    if (!p) { alert('Produto não encontrado.'); return; }
+function editarProduto(id){
+  api.req('/api/admin/products','GET').then(function(produtos){
+    const p = produtos.find(function(x){ return Number(x.id) === Number(id); });
+    if (!p){ alert('Produto não encontrado.'); return; }
     $('produtoId').value = p.id;
     $('pCategoria').value = p.categoria;
     $('pNome').value = p.nome;
@@ -381,24 +822,19 @@ function editarProduto(id) {
     $('pDetalhes').value = p.detalhes || '';
     $('pBrinde').value = p.brinde || '';
     $('pFoto').value = p.foto || '';
-    if (p.foto) {
-      $('pPreviewFoto').src = p.foto;
-      $('pPreviewFoto').style.display = 'block';
-      $('btnRemoverPreviewFoto').style.display = 'inline-flex';
-    } else {
-      $('pPreviewFoto').style.display = 'none';
-      $('btnRemoverPreviewFoto').style.display = 'none';
-    }
+    if (p.foto){ $('pPreviewFoto').src = p.foto; $('pPreviewFoto').style.display = 'block'; $('btnRemoverPreviewFoto').style.display = 'inline-flex'; }
+    else { $('pPreviewFoto').style.display = 'none'; $('btnRemoverPreviewFoto').style.display = 'none'; }
     $('tituloFormProduto').textContent = '✏️ Editando: ' + p.nome;
     $('btnCancelarProduto').style.display = 'inline-flex';
     $('btnSalvarProduto').textContent = 'Salvar alterações';
-    $('aba-produtos').scrollIntoView({ behavior: 'smooth' });
-  }).catch(function (e) {
-    alert('Sessão expirada ou erro de conexão. Faça login novamente.');
-  });
+    $('aba-produtos').scrollIntoView({ behavior:'smooth' });
+    document.querySelectorAll('.aba').forEach(function(a){ a.classList.remove('ativa'); });
+    document.querySelector('[data-aba="produtos"]').classList.add('ativa');
+    document.querySelectorAll('.conteudo-aba').forEach(function(s){ s.classList.remove('ativa'); });
+    $('aba-produtos').classList.add('ativa');
+  }).catch(function(e){ alert('Sessão expirada ou erro de conexão. Faça login novamente.'); });
 }
-
-function cancelarEdicaoProduto() {
+function cancelarEdicaoProduto(){
   $('formProduto').reset();
   $('produtoId').value = '';
   $('tituloFormProduto').textContent = '➕ Novo produto';
@@ -408,41 +844,32 @@ function cancelarEdicaoProduto() {
   $('btnRemoverPreviewFoto').style.display = 'none';
 }
 $('btnCancelarProduto').addEventListener('click', cancelarEdicaoProduto);
-
-$('pArquivoFoto').addEventListener('change', function () {
+$('pArquivoFoto').addEventListener('change', function(){
   const f = this.files[0];
   if (!f) return;
   const r = new FileReader();
-  r.onload = function (e) {
-    $('pPreviewFoto').src = e.target.result;
-    $('pPreviewFoto').style.display = 'block';
-    $('btnRemoverPreviewFoto').style.display = 'inline-flex';
-  };
+  r.onload = function(e){ $('pPreviewFoto').src = e.target.result; $('pPreviewFoto').style.display = 'block'; $('btnRemoverPreviewFoto').style.display = 'inline-flex'; };
   r.readAsDataURL(f);
 });
-$('btnRemoverPreviewFoto').addEventListener('click', function () {
+$('btnRemoverPreviewFoto').addEventListener('click', function(){
   $('pArquivoFoto').value = '';
   $('pPreviewFoto').style.display = 'none';
   this.style.display = 'none';
 });
-
-$('formProduto').addEventListener('submit', async function (e) {
+$('formProduto').addEventListener('submit', async function(e){
   e.preventDefault();
   const id = $('produtoId').value;
   let foto = $('pFoto').value.trim();
   const arquivo = $('pArquivoFoto').files[0];
-  if (arquivo) {
+  if (arquivo){
     const fd = new FormData();
     fd.append('foto', arquivo);
     try {
-      const r = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+      const r = await fetch('/api/admin/upload',{method:'POST',body:fd});
       const j = await r.json();
       if (j.url) foto = j.url;
       else { alert(j.erro || 'Falha no upload. Tente outra imagem.'); return; }
-    } catch (err) {
-      alert('Falha no upload. Verifique a conexão e tente novamente.');
-      return;
-    }
+    } catch(err){ alert('Falha no upload. Verifique a conexão e tente novamente.'); return; }
   }
   const dados = {
     categoria: $('pCategoria').value,
@@ -453,72 +880,64 @@ $('formProduto').addEventListener('submit', async function (e) {
     foto: foto
   };
   try {
-    if (id) await api.req('/api/admin/products/' + id, 'PUT', dados);
-    else await api.req('/api/admin/products', 'POST', dados);
+    if (id) await api.req('/api/admin/products/'+id,'PUT',dados);
+    else await api.req('/api/admin/products','POST',dados);
     alert(id ? '✅ Produto atualizado!' : '✅ Produto criado!');
-  } catch (err) {
-    alert('Não foi possível salvar. Verifique a sessão.');
-    return;
-  }
+  } catch(err){ alert('Não foi possível salvar. Verifique a sessão.'); return; }
   cancelarEdicaoProduto();
   carregarProdutosAdmin();
 });
-
-function excluirProduto(id) {
+function excluirProduto(id){
   if (!confirm('Excluir este produto? Essa ação não pode ser desfeita.')) return;
-  api.req('/api/admin/products/' + id, 'DELETE').then(function (r) {
-    if (r.ok) { alert('✅ Produto excluído com sucesso.'); carregarProdutosAdmin(); }
-  }).catch(function (e) {
-    console.error('Excluir produto:', e);
-  });
+  api.req('/api/admin/products/'+id,'DELETE').then(function(r){
+    if (r.ok){ alert('✅ Produto excluído com sucesso.'); carregarProdutosAdmin(); }
+  }).catch(function(e){ console.error('Excluir produto:', e); });
 }
-
-/* ---------- AVALIAÇÕES ---------- */
-async function carregarAvaliacoesAdmin() {
+/* =========================================================
+   AVALIAÇÕES
+   ========================================================= */
+async function carregarAvaliacoesAdmin(){
   try {
-    const avaliacoes = await api.req('/api/admin/reviews', 'GET');
+    const avaliacoes = await api.req('/api/admin/reviews','GET');
     const lista = $('listaAvaliacoesAdmin');
     lista.innerHTML = '';
-    if (!avaliacoes.length) {
-      lista.innerHTML = '<p class="empty">Nenhuma avaliação recebida.</p>';
-      return;
-    }
-    const pendentes = avaliacoes.filter(function (a) { return !a.aprovado; }).length;
+    if (!avaliacoes.length){ lista.innerHTML = '<p class="empty">Nenhuma avaliação recebida.</p>'; return; }
+    const pendentes = avaliacoes.filter(function(a){ return !a.aprovado; }).length;
     $('badgeAvaliacoes').style.display = pendentes ? 'inline' : 'none';
     $('badgeAvaliacoes').textContent = pendentes;
-    avaliacoes.forEach(function (a) {
+    avaliacoes.forEach(function(a){
       const card = document.createElement('div');
       card.className = 'card';
-      card.innerHTML = '<div class="avaliacao-nome">' + a.nome + ' <span class="estrelas">' + '★'.repeat(a.estrelas) + '☆'.repeat(5 - a.estrelas) + '</span></div>' +
-        '<p>' + a.comentario + '</p>' +
-        '<div class="meta"><span>' + (a.data || '') + '</span><span class="pedido-status ' + (a.aprovado ? 'status-concluido' : 'status-novo') + '">' + (a.aprovado ? '✅ Publicada' : '⏳ Aguardando aprovação') + '</span></div>' +
+      card.innerHTML =
+        '<div class="avaliacao-nome">'+esc(a.nome)+' <span class="estrelas">'+'★'.repeat(a.estrelas)+'☆'.repeat(5-a.estrelas)+'</span></div>' +
+        '<p>'+esc(a.comentario)+'</p>' +
+        '<div class="meta"><span>'+esc(a.data||'')+'</span><span class="pedido-status '+(a.aprovado?'status-concluido':'status-novo')+'">'+(a.aprovado?'✅ Publicada':'⏳ Aguardando aprovação')+'</span></div>' +
         '<div class="acoes">' +
-        (a.aprovado
-          ? '<button type="button" class="btn btn-outline" data-acao="avaliacao" data-id="' + a.id + '" data-aprovado="0">Ocultar</button>'
-          : '<button type="button" class="btn btn-verde" data-acao="avaliacao" data-id="' + a.id + '" data-aprovado="1">Aprovar</button>') +
-        '<button type="button" class="btn btn-vermelho" data-acao="excluir-avaliacao" data-id="' + a.id + '">Excluir</button></div>';
+          (a.aprovado
+            ? '<button type="button" class="btn btn-outline" data-acao="avaliacao" data-id="'+esc(a.id)+'" data-aprovado="0">Ocultar</button>'
+            : '<button type="button" class="btn btn-verde" data-acao="avaliacao" data-id="'+esc(a.id)+'" data-aprovado="1">Aprovar</button>') +
+          '<button type="button" class="btn btn-vermelho" data-acao="excluir-avaliacao" data-id="'+esc(a.id)+'">Excluir</button>' +
+        '</div>';
       lista.appendChild(card);
     });
-  } catch (e) { console.error('Avaliações:', e); }
+  } catch(e){ console.error('Avaliações:', e); }
 }
-async function mudarAvaliacao(id, aprovado) {
-  try {
-    await api.req('/api/admin/reviews/' + id, 'PUT', { aprovado: Number(aprovado) });
-    alert('✅ Avaliação atualizada.');
-    carregarAvaliacoesAdmin();
-  } catch (e) { console.error('Avaliação:', e); }
+async function mudarAvaliacao(id, aprovado){
+  try { await api.req('/api/admin/reviews/'+id,'PUT',{aprovado:Number(aprovado)}); alert('✅ Avaliação atualizada.'); carregarAvaliacoesAdmin(); }
+  catch(e){ console.error('Avaliação:', e); }
 }
-function excluirAvaliacao(id) {
+function excluirAvaliacao(id){
   if (!confirm('Excluir esta avaliação?')) return;
-  api.req('/api/admin/reviews/' + id, 'DELETE').then(function (r) {
-    if (r.ok) { alert('✅ Avaliação excluída.'); carregarAvaliacoesAdmin(); }
-  }).catch(function (e) { console.error('Excluir avaliação:', e); });
+  api.req('/api/admin/reviews/'+id,'DELETE').then(function(r){
+    if (r.ok){ alert('✅ Avaliação excluída.'); carregarAvaliacoesAdmin(); }
+  }).catch(function(e){ console.error('Excluir avaliação:', e); });
 }
-
-/* ---------- CONFIGURAÇÕES ---------- */
-async function carregarConfig() {
+/* =========================================================
+   CONFIGURAÇÕES
+   ========================================================= */
+async function carregarConfig(){
   try {
-    const s = await api.req('/api/admin/settings', 'GET');
+    const s = await api.req('/api/admin/settings','GET');
     $('sNome').value = s.site_nome || '';
     $('sSlogan').value = s.site_slogan || '';
     $('sWhatsapp').value = s.whatsapp || '';
@@ -527,18 +946,15 @@ async function carregarConfig() {
     $('sHeroSubtitulo').value = s.hero_subtitulo || '';
     $('sBrinde').value = s.brinde_destaque || '';
     $('sAtendimento').value = s.atendimento || '';
-    if (s.hero_imagem) {
-      $('sPreviewHero').src = s.hero_imagem;
-      $('sPreviewHero').style.display = 'block';
-    }
-  } catch (e) { console.error('Config:', e); }
+    if (s.hero_imagem){ $('sPreviewHero').src = s.hero_imagem; $('sPreviewHero').style.display = 'block'; }
+  } catch(e){ console.error('Config:', e); }
 }
-$('formConfig').addEventListener('submit', async function (e) {
+$('formConfig').addEventListener('submit', async function(e){
   e.preventDefault();
   const dados = {
     site_nome: $('sNome').value.trim(),
     site_slogan: $('sSlogan').value.trim(),
-    whatsapp: $('sWhatsapp').value.replace(/\D/g, ''),
+    whatsapp: $('sWhatsapp').value.replace(/\D/g,''),
     hero_tag: $('sHeroTag').value.trim(),
     hero_titulo: $('sHeroTitulo').value.trim(),
     hero_subtitulo: $('sHeroSubtitulo').value.trim(),
@@ -546,45 +962,57 @@ $('formConfig').addEventListener('submit', async function (e) {
     atendimento: $('sAtendimento').value.trim()
   };
   try {
-    await api.req('/api/admin/settings', 'PUT', dados);
+    await api.req('/api/admin/settings','PUT',dados);
     $('msgConfig').textContent = '✅ Configurações salvas!';
-    setTimeout(function () { $('msgConfig').textContent = ''; }, 3500);
-  } catch (e) { console.error('Salvar config:', e); }
+    setTimeout(function(){ $('msgConfig').textContent=''; }, 3500);
+  } catch(e){ console.error('Salvar config:', e); }
 });
-$('btnEnviarHero').addEventListener('click', async function () {
+$('btnEnviarHero').addEventListener('click', async function(){
   const arquivo = $('sArquivoHero').files[0];
-  if (!arquivo) { alert('Escolha uma imagem primeiro.'); return; }
+  if (!arquivo){ alert('Escolha uma imagem primeiro.'); return; }
   const fd = new FormData();
   fd.append('foto', arquivo);
   try {
-    const r = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+    const r = await fetch('/api/admin/upload',{method:'POST',body:fd});
     const j = await r.json();
-    if (!j.url) { alert(j.erro || 'Falha no upload.'); return; }
-    await api.req('/api/admin/settings', 'PUT', { hero_imagem: j.url });
+    if (!j.url){ alert(j.erro || 'Falha no upload.'); return; }
+    await api.req('/api/admin/settings','PUT',{hero_imagem:j.url});
     $('sPreviewHero').src = j.url;
     $('sPreviewHero').style.display = 'block';
     alert('✅ Foto de destaque atualizada!');
-  } catch (err) {
-    alert('Falha no upload. Tente novamente.');
-  }
+  } catch(err){ alert('Falha no upload. Tente novamente.'); }
 });
-
-/* ---------- SENHA ---------- */
-$('formSenha').addEventListener('submit', async function (e) {
+$('btnEnviarFotosHero').addEventListener('click', function(){
+  const inp = $('heroArquivoFotos');
+  enviarFotosGaleria('hero',0,inp.files,'listaFotosHero');
+  inp.value = '';
+});
+/* =========================================================
+   SENHA
+   ========================================================= */
+$('formSenha').addEventListener('submit', async function(e){
   e.preventDefault();
   const atual = $('senhaAtual').value;
   const nova = $('senhaNova').value;
-  if (nova.length < 8) {
-    $('msgSenha').style.color = '#b03333';
-    $('msgSenha').textContent = 'A nova senha precisa de 8+ caracteres.';
-    return;
-  }
-  const r = await api.req('/api/admin/password', 'PUT', { atual: atual, nova: nova });
+  if (nova.length < 8){ $('msgSenha').style.color='#b03333'; $('msgSenha').textContent='A nova senha precisa de 8+ caracteres.'; return; }
+  const r = await api.req('/api/admin/password','PUT',{atual:atual,nova:nova});
   $('msgSenha').style.color = r.ok ? '#2e7d32' : '#b03333';
   $('msgSenha').textContent = r.ok ? '✅ Senha trocada com sucesso!' : (r.erro || 'Erro ao trocar senha.');
   this.reset();
-  setTimeout(function () { $('msgSenha').textContent = ''; }, 3500);
+  setTimeout(function(){ $('msgSenha').textContent=''; }, 3500);
 });
+/* =========================================================
+   SIDEBAR MOBILE
+   ========================================================= */
+(function(){
+  var btn = $('btnMenuLateral');
+  var overlay = $('sidebarOverlay');
+  var painelEl = $('painel');
+  function fechar(){ if (painelEl) painelEl.classList.remove('sidebar-aberta'); }
+  if (btn && painelEl) btn.addEventListener('click', function(){ painelEl.classList.toggle('sidebar-aberta'); });
+  if (overlay) overlay.addEventListener('click', fechar);
+  document.querySelectorAll('.sidebar-nav .aba').forEach(function(aba){ aba.addEventListener('click', fechar); });
+})();
 </script>
 </body>
 </html>
